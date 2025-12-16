@@ -187,9 +187,9 @@
   }
 
   if (!window.firebase) {
-    docsEl.innerHTML = '<div class="muted">Integración Firebase no configurada. Los documentos privados no estarán disponibles.</div>';
-    galleryEl.innerHTML = '<div class="muted">Integración Firebase no configurada.</div>';
-    latestVideoEl.innerHTML = '<div class="muted">Configurar video en settings/latest.json o en Drive.</div>';
+    if (docsEl) docsEl.innerHTML = '<div class="muted">Integración Firebase no configurada. Los documentos privados no estarán disponibles.</div>';
+    if (galleryEl) galleryEl.innerHTML = '<div class="muted">Integración Firebase no configurada.</div>';
+    if (latestVideoEl) latestVideoEl.innerHTML = '<div class="muted">Configurar video en settings/latest.json o en Drive.</div>';
     return;
   }
 
@@ -205,7 +205,7 @@
       snap.forEach(d=>{const data=d.data();items.push(`<div><a href="${data.url}" target="_blank">${data.name}</a></div>`)});
       docsEl.innerHTML = items.join('');
     }
-  }catch(e){docsEl.innerText = 'Error cargando documentos: '+e.message}
+  }catch(e){if (docsEl) docsEl.innerText = 'Error cargando documentos: '+e.message}
 
   // Load gallery
   try{
@@ -215,7 +215,7 @@
       snap.forEach(d=>{const data=d.data();items.push(`<div class="card"><img src="${data.url}" alt="${data.name}"></div>`)});
       galleryEl.innerHTML = items.join('');
     }
-  }catch(e){galleryEl.innerText = 'Error cargando galería: '+e.message}
+  }catch(e){if (galleryEl) galleryEl.innerText = 'Error cargando galería: '+e.message}
 
   // Latest video: placeholder — site owner can write a settings/latest.json with {"latestVideoId":"..."}
   try{
@@ -226,6 +226,6 @@
     } else {
       latestVideoEl.innerHTML = '<div class="muted">No hay video configurado.</div>';
     }
-  }catch(e){latestVideoEl.innerText='Error cargando video: '+e.message}
+  }catch(e){if (latestVideoEl) latestVideoEl.innerText='Error cargando video: '+e.message}
 
 })();

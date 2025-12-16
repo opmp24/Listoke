@@ -19,13 +19,8 @@ installBtn?.addEventListener('click', async () => {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     // compute service worker path so registration works from pages/* paths and root
-    let swPath = 'sw.js';
-    try{
-      const parts = location.pathname.split('/').filter(Boolean);
-      // if hosted under a project subpath like /owner/repo/, use that first segment
-      if (parts.length>0) swPath = `/${parts[0]}/sw.js`;
-    }catch(e){ swPath = 'sw.js' }
-    navigator.serviceWorker.register(swPath).then(reg => {
+    // For GitHub pages, the path needs to be relative to the repo root.
+    navigator.serviceWorker.register('/Segured/sw.js').then(reg => {
       console.log('SW registered', reg);
       // check for updates on load
       if (reg && reg.update) reg.update();
