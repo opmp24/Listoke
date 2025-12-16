@@ -8,13 +8,20 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand">
-      <div class="logo">SL</div>
-      <div class="title">Galería</div>
+  <nav class="navbar navbar-expand-lg" style="background:var(--accent);">
+    <div class="container"><a class="navbar-brand text-dark" href="../index.html"><img src="../assets/images/logo.svg" height="32" class="me-2 align-middle" alt="logo">Seguridad Laboral</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link text-dark" href="about.html">A qué nos dedicamos</a></li>
+          <li class="nav-item"><a class="nav-link text-dark" href="documents.html">Documentos</a></li>
+          <li class="nav-item"><a class="nav-link text-dark" href="gallery.html">Galería</a></li>
+          <li class="nav-item"><a class="nav-link text-dark" href="rrss.html">RRSS</a></li>
+          <li class="nav-item"><a class="nav-link text-dark" href="contact.html">Contacto</a></li>
+        </ul>
+      </div>
     </div>
-    <a href="../index.html" class="btn ghost">Inicio</a>
-  </header>
+  </nav>
   <main class="container">
     <section class="cards">
       <h2>Galería</h2>
@@ -23,7 +30,9 @@
         <div class="card"><img src="../assets/images/photo2.svg" alt="ej2"></div>
         <div class="card"><img src="../assets/images/photo3.svg" alt="ej3"></div>
       </div>
-      <h3>Último video</h3>
+      <h3>Videos</h3>
+      <div id="gallery-videos" class="row g-3">Cargando videos...</div>
+      <h3 class="mt-3">Último video</h3>
       <div id="latest-video" class="video-embed">Cargando video...</div>
     </section>
   </main>

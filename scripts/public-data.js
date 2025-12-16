@@ -20,6 +20,13 @@
 
   // If Drive config present, list files from Drive folders (public files)
   if (window.DRIVE_CONFIG){
+    async function fetchDriveFileContent(fileId, apiKey){
+      const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${apiKey}`;
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error('Drive file fetch error ' + resp.status);
+      return resp.text();
+    }
+
     try{
       const apiKey = window.DRIVE_CONFIG.apiKey;
       // documents
@@ -34,18 +41,51 @@
       const apiKey = window.DRIVE_CONFIG.apiKey;
       const galJson = await listDriveFolder(window.DRIVE_CONFIG.galleryFolderId, apiKey, window.DRIVE_CONFIG.maxResults || 100);
       if (galJson && Array.isArray(galJson.files) && galJson.files.length){
-        const items = galJson.files.map(f=>{
+        const imgItems = [];
+        const videoItems = [];
+        galJson.files.forEach(f=>{
           if (f.mimeType && f.mimeType.startsWith('image')){
-            return `<div class="card"><img src="${driveFileUrl(f.id)}" alt="${f.name}"></div>`
+            imgItems.push(`<div class="card"><img src="${driveFileUrl(f.id)}" alt="${f.name}"></div>`)
+          } else if (f.mimeType && f.mimeType.startsWith('video')){
+            videoItems.push(`<div class="col-md-6"><video controls class="w-100" src="${driveFileUrl(f.id)}"></video></div>`)
+          } else {
+            imgItems.push(`<div class="card"><a href="https://drive.google.com/file/d/${f.id}/view" target="_blank">${f.name}</a></div>`)
           }
-          return `<div class="card"><a href="https://drive.google.com/file/d/${f.id}/view" target="_blank">${f.name}</a></div>`
         });
-        galleryEl.innerHTML = items.join('');
+        galleryEl.innerHTML = imgItems.join('');
+        const videosEl = document.getElementById('gallery-videos');
+        if (videosEl) {
+          videosEl.innerHTML = videoItems.join('') || '';
+          // also include any configured YouTube IDs in DRIVE_CONFIG.galleryYouTubeIds
+          if (window.DRIVE_CONFIG && Array.isArray(window.DRIVE_CONFIG.galleryYouTubeIds) && window.DRIVE_CONFIG.galleryYouTubeIds.length){
+            const yItems = window.DRIVE_CONFIG.galleryYouTubeIds.map(id=>`<div class="col-md-6"><div class="ratio ratio-16x9"><iframe src="https://www.youtube.com/embed/${id}" title="YouTube video" allowfullscreen></iframe></div></div>`);
+            videosEl.innerHTML += yItems.join('');
+          }
+          if (!videosEl.innerHTML) videosEl.innerHTML = '<div class="muted">No hay videos en Drive.</div>';
+        }
       } else galleryEl.innerHTML = '<div>No hay imágenes en la galería.</div>';
     }catch(e){galleryEl.innerText = 'Error cargando galería desde Drive: '+e.message}
 
-    // latest video via settings/latest.json in Drive is not implemented; site owner can set video id in a settings file
-      latestVideoEl.innerHTML = '<div class="muted">Configure latest video in settings (settings/latest.json) or via Drive.</div>';
+    // latest video: prefer explicit config, fallback to a text/json file in documents folder
+    try{
+      if (window.DRIVE_CONFIG.latestVideoId){
+        latestVideoEl.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${window.DRIVE_CONFIG.latestVideoId}" frameborder="0" allowfullscreen></iframe>`;
+      } else {
+        // try to find latestVideo.txt or latestVideo.json in documentsFolderId
+        if (window.DRIVE_CONFIG.documentsFolderId){
+          const list = await listDriveFolder(window.DRIVE_CONFIG.documentsFolderId, window.DRIVE_CONFIG.apiKey, 100);
+          const found = list.files && list.files.find(f=>f.name && (f.name.toLowerCase()==='latestvideo.txt' || f.name.toLowerCase()==='latestvideo.json'));
+          if (found){
+            const txt = await fetchDriveFileContent(found.id, window.DRIVE_CONFIG.apiKey);
+            try{ const parsed = JSON.parse(txt); if (parsed.latestVideoId){ latestVideoEl.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${parsed.latestVideoId}" frameborder="0" allowfullscreen></iframe>`; return; } }catch(e){}
+            const id = txt.trim();
+            if (id) latestVideoEl.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
+            else latestVideoEl.innerHTML = '<div class="muted">No hay video configurado.</div>';
+          } else latestVideoEl.innerHTML = '<div class="muted">No hay video configurado.</div>';
+        } else latestVideoEl.innerHTML = '<div class="muted">No hay video configurado.</div>';
+      }
+    }catch(e){latestVideoEl.innerText='Error cargando video: '+e.message}
+
     return;
   }
 

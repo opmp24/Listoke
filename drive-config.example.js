@@ -6,6 +6,10 @@ const DRIVE_CONFIG = {
   apiKey: "YOUR_GOOGLE_API_KEY",
   galleryFolderId: "YOUR_GALLERY_FOLDER_ID",
   documentsFolderId: "YOUR_DOCUMENTS_FOLDER_ID",
+  // optional: a YouTube video id to be shown as 'latest' (e.g. "AVsAEZqGNd4")
+  // latestVideoId: "YOUTUBE_VIDEO_ID",
+  // optional: any static YouTube ids to show in gallery (array)
+  // galleryYouTubeIds: ["AVsAEZqGNd4"],
   // optional: max items to list
   maxResults: 100
 };
