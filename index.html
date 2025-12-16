@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Seguridad Laboral — Demo PWA</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo">SL</div>
+      <div class="title">Seguridad Laboral</div>
+    </div>
+    <button id="installBtn" class="btn ghost">Instalar</button>
+  </header>
+
+  <main class="container">
+    <section id="inicio" class="hero">
+      <h1>Protección en el trabajo, simple y efectiva</h1>
+      <p>Soluciones integrales en prevención de riesgos laborales — formación, auditorías y más.</p>
+    </section>
+
+    <section id="servicios" class="cards">
+      <h2>Servicios</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Formación</h3>
+          <p>Cursos presenciales y online adaptados a su sector.</p>
+        </article>
+        <article class="card">
+          <h3>Auditorías</h3>
+          <p>Revisión y planes de mejora para cumplimiento normativo.</p>
+        </article>
+        <article class="card">
+          <h3>Consultoría</h3>
+          <p>Planes de prevención y gestión de riesgos personalizados.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="informes" class="cards">
+      <h2>Informes</h2>
+      <p>Generación de informes claros con análisis y recomendaciones.</p>
+    </section>
+
+    <section id="contacto" class="cards contact">
+      <h2>Contacto</h2>
+      <form class="contact-form" action="#" onsubmit="return false;">
+        <input type="text" placeholder="Nombre" aria-label="Nombre" />
+        <input type="email" placeholder="Correo" aria-label="Correo" />
+        <textarea placeholder="Mensaje" aria-label="Mensaje"></textarea>
+        <button class="btn">Enviar</button>
+      </form>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navegación">
+    <a href="#inicio">Inicio</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#informes">Informes</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
