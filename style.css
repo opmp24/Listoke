@@ -32,6 +32,14 @@ body{
 .btn.ghost{background:transparent;border:1px solid rgba(15,23,42,0.06);color:var(--text)}
 .bottom-nav{position:fixed;left:0;right:0;bottom:16px;display:flex;gap:8px;justify-content:center;padding:8px}
 .bottom-nav a{background:rgba(255,255,255,0.95);padding:10px 14px;border-radius:12px;text-decoration:none;color:var(--text);box-shadow:0 6px 18px rgba(2,6,23,0.06)}
+.gallery-grid img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+.video-embed{margin-top:12px}
+.muted{color:var(--muted)}
+.small{font-size:0.9rem}
+
+/* Floating WhatsApp button */
+.whatsapp-fab{position:fixed;right:18px;bottom:18px;background:#25D366;color:white;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(2,6,23,0.12);z-index:1000;text-decoration:none}
+.whatsapp-fab img{width:26px;height:26px}
 @media(min-width:900px){
   .bottom-nav{display:none}
   .hero h1{font-size:2rem}

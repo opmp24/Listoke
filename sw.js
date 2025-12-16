@@ -1,13 +1,17 @@
-const CACHE_NAME = 'sl-demo-v2';
+const CACHE_NAME = 'sl-demo-v3';
 const ASSETS = [
   'index.html',
+  'style.css',
   'styles.css',
   'app.js',
+  'admin.html',
   'manifest.json',
   'icons/icon-192.svg',
   'icons/icon-512.svg',
   'icons/icon-192.png',
-  'icons/icon-512.png'
+  'icons/icon-512.png',
+  'scripts/admin.js',
+  'scripts/public-data.js'
 ];
 
 self.addEventListener('install', (event) => {

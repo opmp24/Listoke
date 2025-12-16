@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Administrar — Seguridad Laboral</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo">SL</div>
+      <div class="title">Administrar</div>
+    </div>
+    <a href="index.html" class="btn ghost">Volver</a>
+  </header>
+
+  <main class="container">
+    <section class="cards">
+      <h2>Acceso</h2>
+      <p>Inicie sesión con Google para administrar contenidos y aprobar accesos a documentos privados.</p>
+      <div id="auth-status">Cargando...</div>
+      <div id="auth-buttons">
+        <button id="login-google" class="btn">Iniciar con Google</button>
+        <button id="logout" class="btn ghost" style="display:none">Cerrar sesión</button>
+      </div>
+    </section>
+
+    <section class="cards">
+      <h2>Subir a Galería</h2>
+      <input id="gallery-file" type="file" accept="image/*" />
+      <button id="upload-gallery" class="btn">Subir imagen</button>
+      <div id="gallery-upload-status" class="muted small"></div>
+    </section>
+
+    <section class="cards">
+      <h2>Subir Documentos</h2>
+      <input id="doc-file" type="file" />
+      <label><input id="doc-public" type="checkbox" /> Público</label>
+      <button id="upload-doc" class="btn">Subir documento</button>
+      <div id="doc-upload-status" class="muted small"></div>
+    </section>
+
+    <section class="cards">
+      <h2>Usuarios Aprobados</h2>
+      <div id="approved-list">Cargando…</div>
+    </section>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="scripts/admin.js"></script>
+</body>
+</html>
