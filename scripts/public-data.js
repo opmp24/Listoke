@@ -41,8 +41,8 @@
           const href = f.webViewLink ? f.webViewLink : `https://drive.google.com/file/d/${f.id}/view`;
           return `<div><a href="${href}" target="_blank">${f.name}</a></div>`
         });
-        docsEl.innerHTML = items.join('');
-      } else docsEl.innerHTML = '<div>No hay documentos públicos en Drive (ver consola para diagnóstico).</div>';
+        if (docsEl) docsEl.innerHTML = items.join('');
+      } else if (docsEl) docsEl.innerHTML = '<div>No hay documentos públicos en Drive (ver consola para diagnóstico).</div>';
     }catch(e){
       console.error('Error listing Drive documents', e);
       docsEl.innerText = 'Error cargando documentos desde Drive: '+e.message + '. Revisa la consola para más detalles.';
@@ -66,7 +66,7 @@
             imgItems.push(`<div class="card"><a href="${href}" target="_blank">${f.name}</a></div>`)
           }
         });
-        galleryEl.innerHTML = imgItems.join('');
+        if (galleryEl) galleryEl.innerHTML = imgItems.join('');
         const videosEl = document.getElementById('gallery-videos');
         if (videosEl) {
           videosEl.innerHTML = videoItems.join('') || '';
@@ -77,7 +77,7 @@
           }
           if (!videosEl.innerHTML) videosEl.innerHTML = '<div class="muted">No hay videos en Drive.</div>';
         }
-      } else galleryEl.innerHTML = '<div>No hay imágenes en la galería (ver consola para diagnóstico).</div>';
+      } else if (galleryEl) galleryEl.innerHTML = '<div>No hay imágenes en la galería (ver consola para diagnóstico).</div>';
     }catch(e){
       console.error('Error listing Drive gallery', e);
       galleryEl.innerText = 'Error cargando galería desde Drive: '+e.message + '. Revisa la consola para más detalles.';
@@ -86,7 +86,7 @@
     // latest video: prefer explicit config, fallback to a text/json file in documents folder
     try{
       if (window.DRIVE_CONFIG.latestVideoId){
-        latestVideoEl.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${window.DRIVE_CONFIG.latestVideoId}" frameborder="0" allowfullscreen></iframe>`;
+        if (latestVideoEl) latestVideoEl.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${window.DRIVE_CONFIG.latestVideoId}" frameborder="0" allowfullscreen></iframe>`;
       } else {
         // try to find latestVideo.txt or latestVideo.json in documentsFolderId
         if (window.DRIVE_CONFIG.documentsFolderId){
@@ -96,8 +96,8 @@
             const txt = await fetchDriveFileContent(found.id, window.DRIVE_CONFIG.apiKey);
             try{ const parsed = JSON.parse(txt); if (parsed.latestVideoId){ latestVideoEl.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${parsed.latestVideoId}" frameborder="0" allowfullscreen></iframe>`; return; } }catch(e){}
             const id = txt.trim();
-            if (id) latestVideoEl.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
-            else latestVideoEl.innerHTML = '<div class="muted">No hay video configurado.</div>';
+            if (id && latestVideoEl) latestVideoEl.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
+            else if (latestVideoEl) latestVideoEl.innerHTML = '<div class="muted">No hay video configurado.</div>';
           } else latestVideoEl.innerHTML = '<div class="muted">No hay video configurado.</div>';
         } else latestVideoEl.innerHTML = '<div class="muted">No hay video configurado.</div>';
       }
