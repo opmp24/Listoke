@@ -11,8 +11,9 @@
   }
 
   async function listDriveFolder(folderId){
+    const baseUrl = window.DRIVE_CONFIG.proxyUrl || '';
     // Llamamos a nuestra propia función sin servidor (proxy).
-    const url = `/.netlify/functions/get-drive-files?folderId=${folderId}`;
+    const url = `${baseUrl}/.netlify/functions/get-drive-files?folderId=${folderId}`;
     const resp = await fetch(url);
     const json = await resp.json();
     if (!resp.ok) throw new Error('Error del servidor proxy: ' + (json.error?.message || JSON.stringify(json)));

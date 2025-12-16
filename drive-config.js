@@ -1,7 +1,10 @@
 // d:/VISUAL IA/001TEST/drive-config.js
 
 window.DRIVE_CONFIG = {
-  // Clave de API para acceder a la API de Google Drive.
+  // URL base para las funciones sin servidor.
+  // Dejar en blanco para producción en Netlify/Vercel.
+  // Para desarrollo local, podrías usar 'http://localhost:9999'.
+  proxyUrl: "",
 
   // ID de la carpeta de Google Drive que contiene los documentos públicos.
   // Este ID se extrajo de la URL que proporcionaste.
