@@ -79,7 +79,6 @@
       // No changes needed for the gallery part, but we need to handle the case where galleryEl is null
       if (!window.DRIVE_CONFIG.galleryFolderId || !galleryEl) {
         if (galleryEl) galleryEl.innerHTML = ''; // Clear if element exists but no config
-        return; // Exit if no gallery config or element
       }
       const galJson = await listDriveFolder(window.DRIVE_CONFIG.galleryFolderId);
       console.log('Drive gallery response:', galJson);
