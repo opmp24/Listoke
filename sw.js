@@ -1,5 +1,7 @@
 const CACHE_NAME = 'sl-demo-v3';
+const REPO_PREFIX = '/Segured/'; // Prefijo para GitHub Pages
 const ASSETS = [
+  './', // Esto cachea el index.html en la raíz del repo
   'index.html',
   'drive-config.js',
   'css/style.css',
@@ -19,7 +21,7 @@ const ASSETS = [
   'assets/images/photo1.svg',
   'assets/images/photo2.svg',
   'assets/images/photo3.svg'
-];
+].map(path => REPO_PREFIX + path.replace(/^\.\//, ''));
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
