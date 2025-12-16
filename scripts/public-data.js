@@ -78,36 +78,35 @@
     try{
       // No changes needed for the gallery part, but we need to handle the case where galleryEl is null
       if (!window.DRIVE_CONFIG.galleryFolderId || !galleryEl) {
-        if (galleryEl) galleryEl.innerHTML = ''; // Clear if element exists but no config
-      }
-      const galJson = await listDriveFolder(window.DRIVE_CONFIG.galleryFolderId);
-      console.log('Drive gallery response:', galJson);
-      if (galJson && Array.isArray(galJson.files) && galJson.files.length){
-        const imgItems = [];
-        const videoItems = [];
-        galJson.files.forEach(f=>{
-          if (f.mimeType && f.mimeType.startsWith('image')){
-            const thumb = f.thumbnailLink ? f.thumbnailLink : driveFileUrl(f.id);
-            imgItems.push(`<div class="card"><img src="${thumb}" alt="${f.name}"></div>`)
-          } else if (f.mimeType && f.mimeType.startsWith('video')){
-            videoItems.push(`<div class="col-md-6"><video controls class="w-100" src="${driveFileUrl(f.id)}"></video></div>`)
-          } else {
-            const href = f.webViewLink ? f.webViewLink : `https://drive.google.com/file/d/${f.id}/view`;
-            imgItems.push(`<div class="card"><a href="${href}" target="_blank">${f.name}</a></div>`)
-          }
-        });
-        if (galleryEl) galleryEl.innerHTML = imgItems.join('');
+        if (galleryEl) galleryEl.innerHTML = '<div class="muted small">La carpeta de galería no está configurada.</div>';
         const videosEl = document.getElementById('gallery-videos');
-        if (videosEl) {
-          videosEl.innerHTML = videoItems.join('') || '';
-          // also include any configured YouTube IDs in DRIVE_CONFIG.galleryYouTubeIds
-          if (window.DRIVE_CONFIG && Array.isArray(window.DRIVE_CONFIG.galleryYouTubeIds) && window.DRIVE_CONFIG.galleryYouTubeIds.length){
-            const yItems = window.DRIVE_CONFIG.galleryYouTubeIds.map(id=>`<div class="col-md-6"><div class="ratio ratio-16x9"><iframe src="https://www.youtube.com/embed/${id}" title="YouTube video" allowfullscreen></iframe></div></div>`);
-            videosEl.innerHTML += yItems.join('');
+        if (videosEl) videosEl.innerHTML = ''; // Limpiamos también el de videos
+      } else {
+        const galJson = await listDriveFolder(window.DRIVE_CONFIG.galleryFolderId);
+        console.log('Drive gallery response:', galJson);
+        if (galJson && Array.isArray(galJson.files) && galJson.files.length > 0) {
+          const imgItems = [];
+          const videoItems = [];
+          galJson.files.forEach(f => {
+            if (f.mimeType && f.mimeType.startsWith('image')) {
+              const thumb = f.thumbnailLink ? f.thumbnailLink : driveFileUrl(f.id);
+              imgItems.push(`<div class="card"><img src="${thumb}" alt="${f.name}"></div>`)
+            } else if (f.mimeType && f.mimeType.startsWith('video')) {
+              videoItems.push(`<div class="col-md-6"><video controls class="w-100" src="${driveFileUrl(f.id)}"></video></div>`)
+            }
+          });
+          if (galleryEl) galleryEl.innerHTML = imgItems.join('') || '<div class="muted small">No se encontraron imágenes en la carpeta.</div>';
+          const videosEl = document.getElementById('gallery-videos');
+          if (videosEl) {
+            videosEl.innerHTML = videoItems.join('') || '<div class="muted small">No se encontraron videos de Drive en la carpeta.</div>';
           }
-          if (!videosEl.innerHTML) videosEl.innerHTML = '<div class="muted">No hay videos en Drive.</div>';
+        } else {
+          // La carpeta está vacía o los archivos no son públicos
+          if (galleryEl) galleryEl.innerHTML = '<div class="muted small">No se encontraron imágenes en la carpeta de Drive. Verifique que los archivos sean públicos.</div>';
+          const videosEl = document.getElementById('gallery-videos');
+          if (videosEl) videosEl.innerHTML = ''; // Limpiamos el mensaje "Cargando..."
         }
-      } else if (galleryEl) galleryEl.innerHTML = '<div>No hay imágenes en la galería (ver consola para diagnóstico).</div>';
+      }
     }catch(e){
       console.error('Error listing Drive gallery', e);
       if (galleryEl) galleryEl.innerText = 'Error cargando galería desde Drive: '+e.message + '. Revisa la consola para más detalles.';
