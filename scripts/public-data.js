@@ -10,12 +10,12 @@
     return `https://drive.google.com/uc?export=view&id=${id}`;
   }
 
-  async function listDriveFolder(folderId, apiKey, maxResults=100){
-    const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
-    const url = `https://www.googleapis.com/drive/v3/files?q=${q}&key=${apiKey}&pageSize=${maxResults}&fields=files(id,name,mimeType,webViewLink,thumbnailLink,owners)&supportsAllDrives=true&includeItemsFromAllDrives=true`;
+  async function listDriveFolder(folderId){
+    // Llamamos a nuestra propia función sin servidor (proxy).
+    const url = `/.netlify/functions/get-drive-files?folderId=${folderId}`;
     const resp = await fetch(url);
     const json = await resp.json();
-    if (!resp.ok) throw new Error('Drive API error ' + resp.status + ' — ' + JSON.stringify(json));
+    if (!resp.ok) throw new Error('Error del servidor proxy ' + resp.status + ' — ' + (json.error?.message || JSON.stringify(json)));
     return json;
   }
 
@@ -30,8 +30,7 @@
 
     try{
       // documents
-      const apiKey = window.DRIVE_CONFIG.apiKey;
-      const docsJson = await listDriveFolder(window.DRIVE_CONFIG.documentsFolderId, apiKey);
+      const docsJson = await listDriveFolder(window.DRIVE_CONFIG.documentsFolderId);
       if (docsEl) {
         console.log('Drive documents response:', docsJson);
         if (docsJson && Array.isArray(docsJson.files) && docsJson.files.length){
@@ -82,7 +81,7 @@
         if (galleryEl) galleryEl.innerHTML = ''; // Clear if element exists but no config
         return; // Exit if no gallery config or element
       }
-      const galJson = await listDriveFolder(window.DRIVE_CONFIG.galleryFolderId, window.DRIVE_CONFIG.apiKey);
+      const galJson = await listDriveFolder(window.DRIVE_CONFIG.galleryFolderId);
       console.log('Drive gallery response:', galJson);
       if (galJson && Array.isArray(galJson.files) && galJson.files.length){
         const imgItems = [];
@@ -121,11 +120,11 @@
         if (latestVideoEl) latestVideoEl.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${window.DRIVE_CONFIG.latestVideoId}" frameborder="0" allowfullscreen></iframe>`;
       } else {
         // try to find latestVideo.txt or latestVideo.json in documentsFolderId
-        if (window.DRIVE_CONFIG.documentsFolderId){
-          const list = await listDriveFolder(window.DRIVE_CONFIG.documentsFolderId, window.DRIVE_CONFIG.apiKey, 100);
+        if (window.DRIVE_CONFIG.documentsFolderId && window.DRIVE_CONFIG.apiKey){ // Fallback needs API key
+          const list = await listDriveFolder(window.DRIVE_CONFIG.documentsFolderId);
           const found = list.files && list.files.find(f=>f.name && (f.name.toLowerCase()==='latestvideo.txt' || f.name.toLowerCase()==='latestvideo.json'));
           if (found){
-            const txt = await fetchDriveFileContent(found.id, window.DRIVE_CONFIG.apiKey);
+            const txt = await fetchDriveFileContent(found.id, window.DRIVE_CONFIG.apiKey); // fetchDriveFileContent still needs key
             try{ const parsed = JSON.parse(txt); if (parsed.latestVideoId){ latestVideoEl.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${parsed.latestVideoId}" frameborder="0" allowfullscreen></iframe>`; return; } }catch(e){}
             const id = txt.trim();
             if (id && latestVideoEl) latestVideoEl.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
