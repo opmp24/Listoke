@@ -1,0 +1,5 @@
+[build]
+  # Directorio donde están tus archivos estáticos.
+  publish = "."
+  # Directorio donde vivirán tus funciones sin servidor.
+  functions = "netlify/functions"
