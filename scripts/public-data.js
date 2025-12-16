@@ -10,27 +10,22 @@
     return `https://drive.google.com/uc?export=view&id=${id}`;
   }
 
-  async function listDriveFolder(folderId){
-    // Llamamos a nuestra propia función sin servidor (proxy).
-    const url = `/.netlify/functions/get-drive-files?folderId=${folderId}`;
+  async function listDriveFolder(folderId, apiKey, maxResults=100){
+    const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
+    const url = `https://www.googleapis.com/drive/v3/files?q=${q}&key=${apiKey}&pageSize=${maxResults}&fields=files(id,name,mimeType,webViewLink,thumbnailLink,owners)&supportsAllDrives=true&includeItemsFromAllDrives=true`;
     const resp = await fetch(url);
     const json = await resp.json();
-    if (!resp.ok) throw new Error('Error del servidor proxy ' + resp.status + ' — ' + (json.error?.message || JSON.stringify(json)));
+    if (!resp.ok) throw new Error('Drive API error ' + resp.status + ' — ' + (json.error?.message || JSON.stringify(json)));
     return json;
   }
 
   // If Drive config present, list files from Drive folders (public files)
   if (window.DRIVE_CONFIG){
-    async function fetchDriveFileContent(fileId){
-      const url = `/.netlify/functions/get-drive-file-content?fileId=${fileId}`;
-      const resp = await fetch(url);
-      if (!resp.ok) throw new Error('Error del proxy al obtener contenido del archivo: ' + resp.status);
-      return resp.text();
-    }
-
     try{
       // documents
-      const docsJson = await listDriveFolder(window.DRIVE_CONFIG.documentsFolderId);
+      const apiKey = window.DRIVE_CONFIG.apiKey;
+      if (!apiKey) throw new Error("La clave de API de Google no está en drive-config.js");
+      const docsJson = await listDriveFolder(window.DRIVE_CONFIG.documentsFolderId, apiKey);
       if (docsEl) {
         console.log('Drive documents response:', docsJson);
         if (docsJson && Array.isArray(docsJson.files) && docsJson.files.length){
@@ -79,7 +74,7 @@
     try{
       const galleryFolderId = window.DRIVE_CONFIG.galleryFolderId;
       if (galleryEl && galleryFolderId) {
-        const galJson = await listDriveFolder(galleryFolderId);
+        const galJson = await listDriveFolder(galleryFolderId, window.DRIVE_CONFIG.apiKey);
         console.log('Drive gallery response:', galJson);
 
         if (galJson && Array.isArray(galJson.files) && galJson.files.length > 0) {
@@ -118,16 +113,17 @@
     // Carga el último video de YouTube
     try{
       const channelId = window.DRIVE_CONFIG.youtubeChannelId;
-      if (latestVideoEl && channelId && channelId !== 'YOUR_YOUTUBE_CHANNEL_ID') {
-        const url = `/.netlify/functions/get-latest-youtube-video?channelId=${channelId}`;
+      const apiKey = window.DRIVE_CONFIG.apiKey;
+      if (latestVideoEl && channelId && channelId !== 'YOUR_YOUTUBE_CHANNEL_ID' && apiKey) {
+        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&maxResults=1&type=video&key=${apiKey}`;
         const resp = await fetch(url);
         const json = await resp.json();
 
         if (resp.ok && json.latestVideoId) {
-          latestVideoEl.innerHTML = `<div class="ratio ratio-16x9"><iframe src="https://www.youtube.com/embed/${json.latestVideoId}" title="Último video de YouTube" allowfullscreen></iframe></div>`;
+          latestVideoEl.innerHTML = `<div class="ratio ratio-16x9"><iframe src="https://www.youtube.com/embed/${json.items[0].id.videoId}" title="Último video de YouTube" allowfullscreen></iframe></div>`;
         } else {
-          console.error('Error al obtener el último video de YouTube:', json.error?.message || 'Respuesta no válida del proxy.');
-          latestVideoEl.innerHTML = '<div class="muted">No se pudo cargar el último video.</div>';
+          console.error('Error al obtener el último video de YouTube:', json.error?.message || 'Respuesta no válida de la API.');
+          latestVideoEl.innerHTML = '<div class="muted">No se pudo cargar el último video de YouTube.</div>';
         }
       } else if (latestVideoEl) {
         latestVideoEl.innerHTML = '<div class="muted">El ID del canal de YouTube no está configurado.</div>';
