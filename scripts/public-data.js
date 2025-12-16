@@ -5,6 +5,50 @@
   const galleryEl = el('gallery-grid');
   const latestVideoEl = el('latest-video');
 
+  function driveFileUrl(id){
+    // direct view URL for images/files that are shared "anyone with link"
+    return `https://drive.google.com/uc?export=view&id=${id}`;
+  }
+
+  async function listDriveFolder(folderId, apiKey, maxResults=100){
+    const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
+    const url = `https://www.googleapis.com/drive/v3/files?q=${q}&key=${apiKey}&pageSize=${maxResults}&fields=files(id,name,mimeType)`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error('Drive API error ' + resp.status);
+    return resp.json();
+  }
+
+  // If Drive config present, list files from Drive folders (public files)
+  if (window.DRIVE_CONFIG){
+    try{
+      const apiKey = window.DRIVE_CONFIG.apiKey;
+      // documents
+      const docsJson = await listDriveFolder(window.DRIVE_CONFIG.documentsFolderId, apiKey, window.DRIVE_CONFIG.maxResults || 100);
+      if (docsJson && Array.isArray(docsJson.files) && docsJson.files.length){
+        const items = docsJson.files.map(f=>`<div><a href="https://drive.google.com/file/d/${f.id}/view" target="_blank">${f.name}</a></div>`);
+        docsEl.innerHTML = items.join('');
+      } else docsEl.innerHTML = '<div>No hay documentos públicos en Drive.</div>';
+    }catch(e){docsEl.innerText = 'Error cargando documentos desde Drive: '+e.message}
+
+    try{
+      const apiKey = window.DRIVE_CONFIG.apiKey;
+      const galJson = await listDriveFolder(window.DRIVE_CONFIG.galleryFolderId, apiKey, window.DRIVE_CONFIG.maxResults || 100);
+      if (galJson && Array.isArray(galJson.files) && galJson.files.length){
+        const items = galJson.files.map(f=>{
+          if (f.mimeType && f.mimeType.startsWith('image')){
+            return `<div class="card"><img src="${driveFileUrl(f.id)}" alt="${f.name}"></div>`
+          }
+          return `<div class="card"><a href="https://drive.google.com/file/d/${f.id}/view" target="_blank">${f.name}</a></div>`
+        });
+        galleryEl.innerHTML = items.join('');
+      } else galleryEl.innerHTML = '<div>No hay imágenes en la galería.</div>';
+    }catch(e){galleryEl.innerText = 'Error cargando galería desde Drive: '+e.message}
+
+    // latest video via settings/latest.json in Drive is not implemented; admin can set video id in Firestore or settings file
+    latestVideoEl.innerHTML = '<div class="muted">Configure latest video in Admin.</div>';
+    return;
+  }
+
   // If GitHub config present, try to load gallery/documents from repo via GitHub API
   if (window.GITHUB_CONFIG){
     try{
