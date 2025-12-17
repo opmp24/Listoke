@@ -86,36 +86,47 @@
       displayMessage(docsEl, `Error cargando documentos desde Drive: ${e.message}. Revisa la consola para más detalles.`, true);
     }
 
-    // Carga la galería de imágenes y videos desde Google Drive
+    // Carga la galería de imágenes desde Google Drive
     try{
       const galleryFolderId = window.DRIVE_CONFIG.galleryFolderId;
       if (galleryEl && galleryFolderId) {
         const galJson = await listDriveFolder(galleryFolderId, window.DRIVE_CONFIG.apiKey);
-        console.log('Drive gallery response:', galJson);
 
-        if (galJson && Array.isArray(galJson.files)) {
-          const imgItems = [];
-          const videoItems = [];
+        if (galJson && Array.isArray(galJson.files) && galJson.files.length > 0) {
+          const viewer = el('gallery-viewer');
+          const placeholder = el('gallery-placeholder');
+          
+          galleryEl.innerHTML = ''; // Limpia el "Cargando..."
 
-          galJson.files.forEach(f => {
-            if (f.mimeType?.startsWith('image')) {
-              const thumb = f.thumbnailLink ? f.thumbnailLink.replace(/=s\d+/, '=s400') : driveFileUrl(f.id);
-              imgItems.push(`<div class="card"><img src="${thumb}" alt="${f.name}"></div>`);
-            } else if (f.mimeType?.startsWith('video')) {
-              videoItems.push(`<div class="col-md-6"><video controls class="w-100" src="${driveFileUrl(f.id)}"></video></div>`);
+          galJson.files.forEach((file, index) => {
+            if (!file.mimeType?.startsWith('image')) return; // Solo procesa imágenes
+
+            const thumbUrl = file.thumbnailLink ? file.thumbnailLink.replace(/=s\d+/, '=s400') : driveFileUrl(file.id);
+            
+            const card = document.createElement('div');
+            card.className = 'card gallery-thumb'; // Añadimos una clase para estilos y selección
+            card.innerHTML = `<img src="${thumbUrl}" alt="${file.name}" class="card-img-top">`;
+            
+            card.onclick = (e) => {
+              e.preventDefault();
+              document.querySelectorAll('.gallery-thumb').forEach(item => item.classList.remove('active'));
+              card.classList.add('active');
+
+              if (placeholder) placeholder.classList.add('d-none');
+              if (viewer) {
+                viewer.src = driveFileUrl(file.id); // Carga la imagen en alta resolución en el visor
+                viewer.classList.remove('d-none');
+              }
+            };
+            galleryEl.appendChild(card);
+
+            // Muestra la primera imagen por defecto
+            if (index === 0) {
+              card.click();
             }
           });
-
-          galleryEl.innerHTML = imgItems.length > 0 ? imgItems.join('') : '';
-          if (imgItems.length === 0) displayMessage(galleryEl, 'No se encontraron imágenes en la carpeta de Drive.');
-
-          const videosEl = document.getElementById('gallery-videos');
-          if (videosEl) {
-            videosEl.innerHTML = videoItems.length > 0 ? videoItems.join('') : '';
-            if (videoItems.length === 0) displayMessage(videosEl, 'No se encontraron videos en la carpeta de Drive.');
-          }
         } else {
-          displayMessage(galleryEl, 'No se encontraron archivos en la carpeta de galería. Verifique que los archivos sean públicos.');
+          displayMessage(galleryEl, 'No se encontraron imágenes en la carpeta de galería.');
         }
       } else if (galleryEl) {
         displayMessage(galleryEl, 'La carpeta de galería no está configurada en <code>drive-config.js</code>.');
