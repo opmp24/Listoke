@@ -157,10 +157,19 @@
           if (placeholder) placeholder.classList.add('d-none');
           if (imageViewer) imageViewer.classList.add('d-none'); // Oculta el visor de imagen
 
-          if (videoViewer) {
-            videoViewer.src = `https://www.youtube-nocookie.com/embed/${specificVideoId}`;
-            videoViewer.classList.remove('d-none');
-          }
+          // Solución robusta: Recrear el iframe para evitar problemas de CSP
+          const viewerContainer = el('gallery-viewer-container');
+          const oldViewer = el('gallery-video-viewer');
+          if (oldViewer) oldViewer.remove(); // Elimina el iframe anterior
+
+          const newViewer = document.createElement('iframe');
+          newViewer.id = 'gallery-video-viewer';
+          newViewer.src = `https://www.youtube-nocookie.com/embed/${specificVideoId}`;
+          newViewer.frameBorder = 0;
+          newViewer.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+          newViewer.allowFullscreen = true;
+          
+          viewerContainer.appendChild(newViewer);
         }
         galleryEl.appendChild(card);
       }
