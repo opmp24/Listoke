@@ -2,7 +2,8 @@
 (async function(){
   function el(id){return document.getElementById(id)}
   const docsEl = document.getElementById('documents-list');
-  const galleryEl = document.getElementById('gallery-grid');
+  const imageGridEl = document.getElementById('gallery-grid');
+  const videoGridEl = document.getElementById('videos-grid');
 
   // Función auxiliar para mostrar mensajes en los elementos
   function displayMessage(element, message, isError = false) {
@@ -17,7 +18,7 @@
   // Función para listar archivos de una carpeta de Google Drive usando la API
   async function listDriveFolder(folderId, apiKey, maxResults = 100) {
     const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
-    const url = `https://www.googleapis.com/drive/v3/files?q=${q}&key=${apiKey}&pageSize=${maxResults}&fields=files(id,name,mimeType,webViewLink,thumbnailLink,owners)&supportsAllDrives=true&includeItemsFromAllDrives=true`;
+    const url = `https://www.googleapis.com/drive/v3/files?q=${q}&orderBy=createdTime desc&key=${apiKey}&pageSize=${maxResults}&fields=files(id,name,mimeType,webViewLink,thumbnailLink,owners)&supportsAllDrives=true&includeItemsFromAllDrives=true`;
     const resp = await fetch(url);
     const json = await resp.json();
     if (!resp.ok) {
@@ -25,6 +26,30 @@
       throw new Error(`Error de la API de Drive (${resp.status}): ${errorMessage}`);
     }
     return json;
+  }
+  
+  // --- Lógica para el Modal (Lightbox) ---
+  const modalEl = document.getElementById('gallery-modal');
+  const modalContentWrapper = document.getElementById('modal-content-wrapper');
+  let galleryModal; // Variable para la instancia del modal de Bootstrap
+
+  if (modalEl) {
+    galleryModal = new bootstrap.Modal(modalEl);
+    // Limpiar el contenido del modal cuando se cierra para detener videos, etc.
+    modalEl.addEventListener('hidden.bs.modal', () => {
+      modalContentWrapper.innerHTML = '';
+    });
+  }
+
+  function openInModal(content) {
+    if (!galleryModal || !modalContentWrapper) return;
+    
+    const modalBody = document.createElement('div');
+    modalBody.className = 'modal-body';
+    modalBody.innerHTML = content;
+    modalContentWrapper.innerHTML = ''; // Limpia el contenido anterior
+    modalContentWrapper.appendChild(modalBody);
+    galleryModal.show();
   }
 
   // Si la configuración de Drive está presente, lista los archivos desde las carpetas de Drive.
@@ -88,90 +113,54 @@
     // Carga la galería de imágenes desde Google Drive
     try{
       const galleryFolderId = window.DRIVE_CONFIG.galleryFolderId;
-      if (galleryEl && galleryFolderId) {
+      if (imageGridEl && galleryFolderId) {
         const galJson = await listDriveFolder(galleryFolderId, window.DRIVE_CONFIG.apiKey);
 
         if (galJson && Array.isArray(galJson.files)) {
-          const imageViewer = el('gallery-image-viewer');
-          const videoViewer = el('gallery-video-viewer');
-          const placeholder = el('gallery-placeholder');
-          
-          galleryEl.innerHTML = ''; // Limpia el "Cargando..."
+          imageGridEl.innerHTML = ''; // Limpia el "Cargando..."
 
-          galJson.files.forEach((file, index) => {
+          galJson.files.forEach(file => {
             if (!file.mimeType?.startsWith('image')) return; // Solo procesa imágenes
 
             const thumbUrl = file.thumbnailLink ? file.thumbnailLink.replace(/=s\d+/, '=s400') : driveFileUrl(file.id);
             
-            const card = document.createElement('div');
-            card.className = 'card gallery-thumb'; // Añadimos una clase para estilos y selección
-            card.innerHTML = `<img src="${thumbUrl}" alt="${file.name}" class="card-img-top">`;
+            const item = document.createElement('div');
+            item.className = 'grid-item';
+            item.innerHTML = `<img src="${thumbUrl}" alt="${file.name}">`;
             
-            card.onclick = (e) => {
+            item.onclick = (e) => {
               e.preventDefault();
-              document.querySelectorAll('.gallery-thumb').forEach(item => item.classList.remove('active'));
-              card.classList.add('active');
-
-              if (placeholder) placeholder.classList.add('d-none');              
-              if (videoViewer) videoViewer.classList.add('d-none'); // Oculta el visor de video
-
-              if (imageViewer) {
-                imageViewer.src = driveFileUrl(file.id); // Carga la imagen en alta resolución en el visor
-                imageViewer.classList.remove('d-none');
-              }
+              const highResUrl = driveFileUrl(file.id);
+              openInModal(`<img src="${highResUrl}" alt="${file.name}">`);
             };
-            galleryEl.appendChild(card);
-
-            // Muestra la primera imagen por defecto
-            if (index === 0) {
-              card.click();
-            }
+            imageGridEl.appendChild(item);
           });
+          if (imageGridEl.innerHTML === '') displayMessage(imageGridEl, 'No se encontraron imágenes.');
         }
-      } else if (galleryEl) {
-        displayMessage(galleryEl, 'La carpeta de galería no está configurada en <code>drive-config.js</code>.');
+      } else if (imageGridEl) {
+        displayMessage(imageGridEl, 'La carpeta de galería no está configurada en <code>drive-config.js</code>.');
       }
     }catch(e){
       console.error('Error listing Drive gallery', e);
-      displayMessage(galleryEl, `Error cargando galería desde Drive: ${e.message}. Revisa la consola para más detalles.`, true);
+      displayMessage(imageGridEl, `Error cargando galería desde Drive: ${e.message}. Revisa la consola para más detalles.`, true);
     }
 
-    // Carga el video de YouTube y lo añade a la galería
+    // Carga el video de YouTube y lo añade a la pestaña de videos
     try {
       const specificVideoId = window.DRIVE_CONFIG.latestVideoId;
-      if (galleryEl && specificVideoId) {
-        const imageViewer = el('gallery-image-viewer');
-        const videoViewer = el('gallery-video-viewer');
-        const placeholder = el('gallery-placeholder');
+      if (videoGridEl && specificVideoId) {
+        videoGridEl.innerHTML = ''; // Limpia el "Cargando..."
 
-        const card = document.createElement('div');
-        card.className = 'card gallery-thumb';
-        // Usamos la miniatura oficial de YouTube
-        card.innerHTML = `<img src="https://img.youtube.com/vi/${specificVideoId}/0.jpg" alt="Video de YouTube" class="card-img-top">`;
+        const item = document.createElement('div');
+        item.className = 'grid-item';
+        item.innerHTML = `<img src="https://img.youtube.com/vi/${specificVideoId}/mqdefault.jpg" alt="Video de YouTube">`;
         
-        card.onclick = (e) => {
+        item.onclick = (e) => {
           e.preventDefault();
-          document.querySelectorAll('.gallery-thumb').forEach(item => item.classList.remove('active'));
-          card.classList.add('active');
-
-          if (placeholder) placeholder.classList.add('d-none');
-          if (imageViewer) imageViewer.classList.add('d-none'); // Oculta el visor de imagen
-
-          // Solución robusta: Recrear el iframe para evitar problemas de CSP
-          const viewerContainer = el('gallery-viewer-container');
-          const oldViewer = el('gallery-video-viewer');
-          if (oldViewer) oldViewer.remove(); // Elimina el iframe anterior
-
-          const newViewer = document.createElement('iframe');
-          newViewer.id = 'gallery-video-viewer';
-          newViewer.src = `https://www.youtube-nocookie.com/embed/${specificVideoId}`;
-          newViewer.frameBorder = 0;
-          newViewer.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-          newViewer.allowFullscreen = true;
-          
-          viewerContainer.appendChild(newViewer);
+          const videoEmbed = `<div class="ratio ratio-16x9"><iframe src="https://www.youtube-nocookie.com/embed/${specificVideoId}?autoplay=1" title="Video de YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+          openInModal(videoEmbed);
         }
-        galleryEl.appendChild(card);
+        videoGridEl.appendChild(item);
       }
     } catch (e) {
       console.error('Error al cargar videos de YouTube:', e);
@@ -191,7 +180,7 @@
         if (Array.isArray(docsJson) && docsJson.length>0){
           const items = docsJson.map(f=>`<div><a href="https://raw.githubusercontent.com/${window.GITHUB_CONFIG.owner}/${window.GITHUB_CONFIG.repo}/${window.GITHUB_CONFIG.branch}/${f.path}" target="_blank">${f.name}</a></div>`);
           docsEl.innerHTML = items.join('');
-        } else displayMessage(docsEl, 'No hay documentos públicos en el repo.');
+        } else displayMessage(docsEl, 'No hay documentos públicos en el repositorio.');
       } else {
         displayMessage(docsEl, 'No se pudo listar documentos desde GitHub.');
       }
@@ -202,7 +191,7 @@
       const galResp = await fetch(galUrl);
       if (galResp.ok){
         const galJson = await galResp.json();
-        galleryEl.innerHTML = ''; // Limpiar
+        imageGridEl.innerHTML = ''; // Limpiar
         if (Array.isArray(galJson) && galJson.length>0){
           galJson.forEach(f => {
             const card = document.createElement('div');
@@ -211,10 +200,10 @@
             img.src = `https://raw.githubusercontent.com/${window.GITHUB_CONFIG.owner}/${window.GITHUB_CONFIG.repo}/${window.GITHUB_CONFIG.branch}/${f.path}`;
             img.alt = f.name;
             card.appendChild(img);
-            galleryEl.appendChild(card);
+            imageGridEl.appendChild(card);
           });
-        } else displayMessage(galleryEl, 'No hay imágenes en la galería.');
-      } else displayMessage(galleryEl, 'No se pudo listar galería desde GitHub.');
+        } else displayMessage(imageGridEl, 'No hay imágenes en la galería.');
+      } else displayMessage(imageGridEl, 'No se pudo listar galería desde GitHub.');
     }catch(e){ displayMessage(galleryEl, `Error cargando galería: ${e.message}`, true); }
 
     // Latest video from settings in repo (simple file settings/latest.json with {"latestVideoId":"..."})
@@ -234,8 +223,8 @@
 
   if (!window.firebase) {
     displayMessage(docsEl, 'Integración Firebase no configurada. Los documentos privados no estarán disponibles.');
-    displayMessage(galleryEl, 'Integración Firebase no configurada.');
-    displayMessage(latestVideoEl, 'Configurar video en settings/latest.json o en Drive.');
+    displayMessage(imageGridEl, 'Integración Firebase no configurada.');
+    displayMessage(videoGridEl, 'Configurar video en settings/latest.json o en Drive.');
     return;
   }
 
