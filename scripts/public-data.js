@@ -15,7 +15,10 @@
     const url = `https://www.googleapis.com/drive/v3/files?q=${q}&key=${apiKey}&pageSize=${maxResults}&fields=files(id,name,mimeType,webViewLink,thumbnailLink,owners)&supportsAllDrives=true&includeItemsFromAllDrives=true`;
     const resp = await fetch(url);
     const json = await resp.json();
-    if (!resp.ok) throw new Error('Drive API error ' + resp.status + ' — ' + (json.error?.message || JSON.stringify(json)));
+    if (!resp.ok) {
+      const errorMessage = json.error?.message || JSON.stringify(json);
+      throw new Error(`Error de la API de Drive (${resp.status}): ${errorMessage}`);
+    }
     return json;
   }
 
@@ -27,7 +30,7 @@
       if (!apiKey) throw new Error("La clave de API de Google no está en drive-config.js");
       const docsJson = await listDriveFolder(window.DRIVE_CONFIG.documentsFolderId, apiKey);
       if (docsEl) {
-        console.log('Drive documents response:', docsJson);
+        // console.log('Drive documents response:', docsJson);
         if (docsJson && Array.isArray(docsJson.files) && docsJson.files.length){
           const viewer = el('doc-viewer');
           const placeholder = el('viewer-placeholder');
@@ -77,7 +80,7 @@
         const galJson = await listDriveFolder(galleryFolderId, window.DRIVE_CONFIG.apiKey);
         console.log('Drive gallery response:', galJson);
 
-        if (galJson && Array.isArray(galJson.files) && galJson.files.length > 0) {
+        if (galJson && Array.isArray(galJson.files)) {
           const imgItems = [];
           const videoItems = [];
 
@@ -90,13 +93,13 @@
             }
           });
 
-          galleryEl.innerHTML = imgItems.length > 0 ? imgItems.join('') : '<div class="muted small">No se encontraron imágenes en la carpeta de Drive.</div>';
+          galleryEl.innerHTML = imgItems.length > 0 ? imgItems.join('') : '<div class="text-muted small">No se encontraron imágenes en la carpeta de Drive.</div>';
           const videosEl = document.getElementById('gallery-videos');
           if (videosEl) {
-            videosEl.innerHTML = videoItems.length > 0 ? videoItems.join('') : '<div class="muted small">No se encontraron videos en la carpeta de Drive.</div>';
+            videosEl.innerHTML = videoItems.length > 0 ? videoItems.join('') : '<div class="text-muted small">No se encontraron videos en la carpeta de Drive.</div>';
           }
         } else {
-          galleryEl.innerHTML = '<div class="muted small">No se encontraron archivos en la carpeta de galería. Verifique que los archivos sean públicos.</div>';
+          galleryEl.innerHTML = '<div class="text-muted small">No se encontraron archivos en la carpeta de galería. Verifique que los archivos sean públicos.</div>';
           const videosEl = document.getElementById('gallery-videos');
           if (videosEl) videosEl.innerHTML = '';
         }
@@ -119,7 +122,7 @@
         const resp = await fetch(url);
         const json = await resp.json();
 
-        if (resp.ok && json.latestVideoId) {
+        if (resp.ok && json.items && json.items.length > 0) {
           latestVideoEl.innerHTML = `<div class="ratio ratio-16x9"><iframe src="https://www.youtube.com/embed/${json.items[0].id.videoId}" title="Último video de YouTube" allowfullscreen></iframe></div>`;
         } else {
           console.error('Error al obtener el último video de YouTube:', json.error?.message || 'Respuesta no válida de la API.');
