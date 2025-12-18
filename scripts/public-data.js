@@ -130,8 +130,8 @@
             const col = document.createElement('div');
             col.className = 'col';
             // Usamos el componente card de Bootstrap
-            const item = document.createElement('div');
-            item.className = 'card h-100 border-0 rounded-0';
+            const item = document.createElement('a');
+            item.href = '#';
             item.innerHTML = `<img src="${thumbUrl}" class="card-img-top rounded-0" alt="${file.name}" style="aspect-ratio: 1/1; object-fit: cover; cursor: pointer;">`;
 
             if (isImage) {
@@ -171,8 +171,8 @@
         
         const col = document.createElement('div');
         col.className = 'col';
-        const item = document.createElement('div');
-        item.className = 'card h-100 border-0 rounded-0';
+        const item = document.createElement('a');
+        item.href = '#';
         item.innerHTML = `<img src="https://img.youtube.com/vi/${specificVideoId}/mqdefault.jpg" class="card-img-top rounded-0" alt="Video de YouTube" style="aspect-ratio: 1/1; object-fit: cover; cursor: pointer;">`;
 
         item.onclick = (e) => {
@@ -218,8 +218,8 @@
           galJson.forEach(f => {
             const col = document.createElement('div');
             col.className = 'col';
-            const item = document.createElement('div');
-            item.className = 'card h-100 border-0 rounded-0';
+            const item = document.createElement('a');
+            item.href = '#';
             item.innerHTML = `<img src="https://raw.githubusercontent.com/${window.GITHUB_CONFIG.owner}/${window.GITHUB_CONFIG.repo}/${window.GITHUB_CONFIG.branch}/${f.path}" class="card-img-top rounded-0" alt="${f.name}" style="aspect-ratio: 1/1; object-fit: cover; cursor: pointer;">`;
             
             item.onclick = (e) => {
@@ -278,10 +278,10 @@
         const data = d.data();
         const col = document.createElement('div');
         col.className = 'col';
-        const item = document.createElement('div');
-        item.className = 'card h-100 border-0 rounded-0';
+        const item = document.createElement('a');
+        item.href = '#';
         item.innerHTML = `<img src="${data.url}" class="card-img-top rounded-0" alt="${data.name}" style="aspect-ratio: 1/1; object-fit: cover; cursor: pointer;">`;
-        item.onclick = () => openInModal(`<img src="${data.url}" class="img-fluid" alt="${data.name}">`);
+        item.onclick = (e) => { e.preventDefault(); openInModal(`<img src="${data.url}" class="img-fluid" alt="${data.name}">`); };
         col.appendChild(item);
         imageGridEl.appendChild(col);
       });

@@ -1,22 +1,12 @@
-/* Copied and moved style.css to css/ for organization */
-  /* Brand palette: primary = brand yellow, dark = black */
-  --bg:#f8fafc; /* Usamos un gris muy claro de fondo */
-  --muted:#6b7280;
-  --accent:#fbbf24; /* brand yellow, corresponde a 'warning' en Bootstrap */
-  --accent-dark:#b45309;
-  --brand-black:#0b0b0b;
-  --text:#0b0b0b;
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
-  background-color: var(--bg);
-  color:var(--text);
+/* Estilos personalizados mínimos */
+:root {
+  /* Variables de color para el botón de WhatsApp */
+  --accent: #fbbf24;
+  --brand-black: #0b0b0b;
 }
 
 /* Floating WhatsApp button */
 .whatsapp-fab{position:fixed;right:18px;bottom:18px;background:var(--accent);color:var(--brand-black);width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,0.12);z-index:1000;text-decoration:none;border:3px solid var(--brand-black)}
 
 @media(min-width:900px){
-  /* Aquí podrían ir estilos específicos para escritorio si fueran necesarios */
 }
