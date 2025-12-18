@@ -44,11 +44,9 @@
   function openInModal(content) {
     if (!galleryModal || !modalContentWrapper) return;
     
-    const modalBody = document.createElement('div');
-    modalBody.className = 'modal-body';
-    modalBody.innerHTML = content;
     modalContentWrapper.innerHTML = ''; // Limpia el contenido anterior
-    modalContentWrapper.appendChild(modalBody);
+    modalContentWrapper.innerHTML = content;
+
     galleryModal.show();
   }
 
@@ -131,9 +129,10 @@
             // Creamos la columna de Bootstrap
             const col = document.createElement('div');
             col.className = 'col';
-            const item = document.createElement('div'); // Contenedor interno para el aspect-ratio
-            item.className = 'grid-item-bootstrap';
-            item.innerHTML = `<img src="${thumbUrl}" alt="${file.name}">`;
+            // Usamos el componente card de Bootstrap
+            const item = document.createElement('div');
+            item.className = 'card h-100 border-0 rounded-0';
+            item.innerHTML = `<img src="${thumbUrl}" class="card-img-top rounded-0" alt="${file.name}" style="aspect-ratio: 1/1; object-fit: cover; cursor: pointer;">`;
 
             if (isImage) {
               item.onclick = (e) => {
@@ -146,7 +145,7 @@
             } else if (isVideo) {
               item.onclick = (e) => {
                 e.preventDefault();
-                const videoEmbed = `<div class="ratio ratio-16x9"><iframe src="${driveFileUrl(file.id)}" title="${file.name}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
+                const videoEmbed = `<div class="ratio ratio-16x9"><iframe src="${driveFileUrl(file.id)}" title="${file.name}" class="rounded-0" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
                 openInModal(videoEmbed);
               };
               col.appendChild(item);
@@ -173,12 +172,12 @@
         const col = document.createElement('div');
         col.className = 'col';
         const item = document.createElement('div');
-        item.className = 'grid-item-bootstrap';
-        item.innerHTML = `<img src="https://img.youtube.com/vi/${specificVideoId}/mqdefault.jpg" alt="Video de YouTube">`;
+        item.className = 'card h-100 border-0 rounded-0';
+        item.innerHTML = `<img src="https://img.youtube.com/vi/${specificVideoId}/mqdefault.jpg" class="card-img-top rounded-0" alt="Video de YouTube" style="aspect-ratio: 1/1; object-fit: cover; cursor: pointer;">`;
 
         item.onclick = (e) => {
           e.preventDefault();
-          const videoEmbed = `<div class="ratio ratio-16x9"><iframe src="https://www.youtube-nocookie.com/embed/${specificVideoId}?autoplay=1" title="Video de YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+          const videoEmbed = `<div class="ratio ratio-16x9"><iframe src="https://www.youtube-nocookie.com/embed/${specificVideoId}?autoplay=1" title="Video de YouTube" class="rounded-0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
           openInModal(videoEmbed);
         };
         col.appendChild(item);
@@ -220,12 +219,12 @@
             const col = document.createElement('div');
             col.className = 'col';
             const item = document.createElement('div');
-            item.className = 'grid-item-bootstrap';
-            item.innerHTML = `<img src="https://raw.githubusercontent.com/${window.GITHUB_CONFIG.owner}/${window.GITHUB_CONFIG.repo}/${window.GITHUB_CONFIG.branch}/${f.path}" alt="${f.name}">`;
+            item.className = 'card h-100 border-0 rounded-0';
+            item.innerHTML = `<img src="https://raw.githubusercontent.com/${window.GITHUB_CONFIG.owner}/${window.GITHUB_CONFIG.repo}/${window.GITHUB_CONFIG.branch}/${f.path}" class="card-img-top rounded-0" alt="${f.name}" style="aspect-ratio: 1/1; object-fit: cover; cursor: pointer;">`;
             
             item.onclick = (e) => {
               e.preventDefault();
-              openInModal(`<img src="${item.querySelector('img').src}" alt="${f.name}">`);
+              openInModal(`<img src="${item.querySelector('img').src}" class="img-fluid" alt="${f.name}">`);
             };
             col.appendChild(item);
             imageGridEl.appendChild(col);
@@ -280,9 +279,9 @@
         const col = document.createElement('div');
         col.className = 'col';
         const item = document.createElement('div');
-        item.className = 'grid-item-bootstrap';
-        item.innerHTML = `<img src="${data.url}" alt="${data.name}">`;
-        item.onclick = () => openInModal(`<img src="${data.url}" alt="${data.name}">`);
+        item.className = 'card h-100 border-0 rounded-0';
+        item.innerHTML = `<img src="${data.url}" class="card-img-top rounded-0" alt="${data.name}" style="aspect-ratio: 1/1; object-fit: cover; cursor: pointer;">`;
+        item.onclick = () => openInModal(`<img src="${data.url}" class="img-fluid" alt="${data.name}">`);
         col.appendChild(item);
         imageGridEl.appendChild(col);
       });

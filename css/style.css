@@ -1,89 +1,22 @@
 /* Copied and moved style.css to css/ for organization */
-:root{
   /* Brand palette: primary = brand yellow, dark = black */
-  --bg:#ffffff;
-  --card:#591919;
+  --bg:#f8fafc; /* Usamos un gris muy claro de fondo */
   --muted:#6b7280;
-  --accent:#fbbf24; /* brand yellow */
-  --accent-dark:#b45309; /* darker amber for accents */
+  --accent:#fbbf24; /* brand yellow, corresponde a 'warning' en Bootstrap */
+  --accent-dark:#b45309;
   --brand-black:#0b0b0b;
   --text:#0b0b0b;
-}
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
-  background:linear-gradient(180deg, var(--bg) 0%, #fff7ed 100%);
+  background-color: var(--bg);
   color:var(--text);
 }
-.app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:transparent}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:48px;height:48px;background:var(--accent);color:var(--brand-black);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:Inter,system-ui}
-.title{font-weight:800;color:var(--brand-black)}
-.container{padding:18px;max-width:900px;margin:0 auto}
-.hero{background:transparent;padding:18px 0}
-.hero h1{margin:0 0 6px;font-size:1.6rem}
-.hero p{margin:0;color:var(--muted)}
-.cards{margin-top:22px;padding:12px;background:transparent}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
-.card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.06)}
-.card h3{margin:0 0 6px}
-.contact-form{display:flex;flex-direction:column;gap:8px;max-width:480px}
-.contact-form input,.contact-form textarea{padding:10px;border-radius:8px;border:1px solid #e6eef7;font-size:0.95rem}
-.contact-form textarea{min-height:100px}
-.btn{background:var(--accent);color:var(--brand-black);padding:10px 14px;border-radius:10px;border:none;cursor:pointer}
-.btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--text)}
-.bottom-nav{position:fixed;left:0;right:0;bottom:16px;display:flex;gap:8px;justify-content:center;padding:8px}
-.bottom-nav a{background:rgba(255,255,255,0.95);padding:10px 14px;border-radius:12px;text-decoration:none;color:var(--text);box-shadow:0 6px 18px rgba(2,6,23,0.06)}
-.video-embed{margin-top:12px}
-.muted{color:var(--muted)}
-.small{font-size:0.9rem}
 
 /* Floating WhatsApp button */
 .whatsapp-fab{position:fixed;right:18px;bottom:18px;background:var(--accent);color:var(--brand-black);width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,0.12);z-index:1000;text-decoration:none;border:3px solid var(--brand-black)}
-.whatsapp-fab img{width:26px;height:26px}
 
 @media(min-width:900px){
-  .bottom-nav{display:none}
-  .hero h1{font-size:2rem}
-}
-
-/* Estilos para la galería con Bootstrap Grid */
-.grid-item-bootstrap {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1; /* Mantiene la proporción cuadrada */
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.grid-item-bootstrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Recorta la imagen para que llene el contenedor cuadrado */
-  transition: transform 0.2s ease-in-out;
-}
-
-.grid-item-bootstrap:hover img {
-  transform: scale(1.1);
-}
-
-/* Estilos para el Modal (Lightbox) */
-#gallery-modal .modal-dialog {
-  max-width: 90vw; /* Usa el 90% del ancho de la pantalla */
-}
-
-#modal-content-wrapper .modal-body {
-  padding: 0;
-  background-color: #000; /* Fondo negro para el contenido del modal */
-}
-
-#modal-content-wrapper img,
-#modal-content-wrapper iframe {
-  width: 100%;
-  height: 90vh; /* Añadido: asegura que la imagen use la altura disponible */
-  max-height: 90vh; /* Usa el 90% de la altura de la pantalla */
-  display: block;
-  margin: auto;
-  object-fit: contain; /* Asegura que la imagen completa se vea sin ser cortada */
+  /* Aquí podrían ir estilos específicos para escritorio si fueran necesarios */
 }
