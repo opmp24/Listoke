@@ -102,7 +102,7 @@
     <div class="row justify-content-center mt-5">
       <div class="col-lg-10">
         <div class="ratio ratio-21x9 shadow rounded overflow-hidden">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.607783262606!2d-70.6504502!3d-33.4377756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5a7126c617b%3A0x50e5db411453300!2sSantiago%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses!2scl!4v1695158452145!5m2!1ses!2scl" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <iframe id="map-frame" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </div>
     </div>
@@ -139,6 +139,40 @@
     </svg>
   </a>
 
+  <script src="/Segured/drive-config.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const mapFrame = document.getElementById('map-frame');
+      // Verificamos que exista la configuración y el iframe
+      if (!mapFrame || !window.DRIVE_CONFIG || !window.DRIVE_CONFIG.apiKey) return;
+
+      const { apiKey, mapsFolderId } = window.DRIVE_CONFIG;
+
+      try {
+        // Buscamos el archivo sucursales.txt específicamente en la carpeta de mapas
+        const q = `name = 'sucursales.txt' and '${mapsFolderId}' in parents and mimeType = 'text/plain' and trashed = false`;
+        const searchUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${apiKey}`;
+        
+        const searchResp = await fetch(searchUrl);
+        const searchData = await searchResp.json();
+
+        if (searchData.files && searchData.files.length > 0) {
+          const fileId = searchData.files[0].id;
+          // Obtenemos el contenido del archivo (la dirección)
+          const contentUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${apiKey}`;
+          const contentResp = await fetch(contentUrl);
+          const address = await contentResp.text();
+
+          if (address && address.trim()) {
+            // Actualizamos el iframe con la dirección obtenida
+            mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(address.trim())}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+          }
+        }
+      } catch (error) {
+        console.error('Error cargando el mapa:', error);
+      }
+    });
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/Segured/app.js" defer></script>
 </body>
