@@ -43,6 +43,10 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(req)
         .then(resp => {
+          // Verificamos que la respuesta sea válida (status 200) antes de actualizar la caché
+          if (!resp || resp.status !== 200 || resp.type !== 'basic') {
+            return resp;
+          }
           // Si la petición de red funciona, la cacheamos y la devolvemos
           return caches.open(CACHE_NAME).then(cache => {
             cache.put(req, resp.clone());
@@ -58,8 +62,4 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(req).then(cached => cached || fetch(req))
   );
-});
-
-self.addEventListener('message', (event) => {
-  if (event.data === 'skipWaiting') self.skipWaiting();
 });
