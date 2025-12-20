@@ -11,6 +11,10 @@ window.DRIVE_CONFIG = {
   // ID de la carpeta de Google Drive que contiene las imágenes para la galería.
   galleryFolderId: "1YglcilvObqlV2G7lJwWJLlMFuRYLrXGH",
 
+  // (Opcional) ID de la carpeta que contiene iconos personalizados.
+  // REEMPLAZA "YOUR_ICONS_FOLDER_ID" con el ID real de tu carpeta.
+  iconsFolderId: "YOUR_ICONS_FOLDER_ID",
+
   // ID de la carpeta de Google Drive que contiene los archivos de mapas.
   mapsFolderId: "1I0vMnMlOsV09PZBVblkYRcqsACjHEX0I",
 
