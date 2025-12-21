@@ -2,39 +2,44 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // --- Lógica de Instalación de la PWA ---
   let deferredPrompt;
-  const installBtn = document.getElementById('installBtn');
 
   window.addEventListener('beforeinstallprompt', (e) => {
     // Previene que el mini-infobar aparezca en móviles
     e.preventDefault();
     // Guarda el evento para que pueda ser disparado más tarde
     deferredPrompt = e;
-    // Muestra el botón de instalación
-    if (installBtn) {
-      installBtn.style.display = 'block';
-    }
+    // Intenta mostrar el botón (si ya existe en el DOM)
+    window.checkInstallButton();
   });
 
-  if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        // Oculta nuestro botón de instalación
-        installBtn.style.display = 'none';
-        // Muestra el prompt de instalación del navegador
-        deferredPrompt.prompt();
-        // Espera a que el usuario responda
-        await deferredPrompt.userChoice;
-        // El prompt ya no se puede usar, lo descartamos
-        deferredPrompt = null;
-      }
-    });
-  }
+  // Función global para verificar y mostrar el botón
+  window.checkInstallButton = () => {
+    const btn = document.getElementById('installBtn');
+    if (btn && deferredPrompt) {
+      btn.style.display = 'block';
+    }
+  };
+
+  // Delegación de eventos para el click (funciona aunque el botón se reemplace)
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('#installBtn');
+    if (btn && deferredPrompt) {
+      // Oculta nuestro botón de instalación
+      btn.style.display = 'none';
+      // Muestra el prompt de instalación del navegador
+      deferredPrompt.prompt();
+      // Espera a que el usuario responda
+      await deferredPrompt.userChoice;
+      // El prompt ya no se puede usar, lo descartamos
+      deferredPrompt = null;
+    }
+  });
 
   // Intentamos cargar el icono personalizado inmediatamente (para el logo y botón)
   loadCustomInstallIcon();
 
   // --- Carga del Icono de Instalación desde Google Drive ---
-  async function loadCustomInstallIcon() {
+  window.loadCustomInstallIcon = async function() {
     // Salimos si no hay configuración o carpeta de iconos definida
     if (!window.DRIVE_CONFIG || !window.DRIVE_CONFIG.apiKey || !window.DRIVE_CONFIG.iconsFolderId) {
       return;
@@ -55,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const iconUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${apiKey}`;
         
         // 1. Actualizar el icono del botón de instalación (si existe)
+        const installBtn = document.getElementById('installBtn');
         if (installBtn) {
           const originalSvg = installBtn.querySelector('svg');
           if (originalSvg) {
