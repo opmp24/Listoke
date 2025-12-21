@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const response = await fetch('/Segured/index.html');
+        // Detectar si estamos en GitHub Pages (/Segured/) o local (/)
+        const repoPrefix = window.location.pathname.includes('/Segured/') ? '/Segured' : '';
+        const response = await fetch(`${repoPrefix}/index.html`);
         if (!response.ok) throw new Error('Could not fetch master template.');
         
         const text = await response.text();

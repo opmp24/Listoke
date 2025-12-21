@@ -1,14 +1,111 @@
 /* Estilos personalizados mínimos */
 :root {
   /* Variables de color para el botón de WhatsApp */
+  --primary-color: #fbbf24;
+  --dark-color: #15161D;
+  --light-color: #FBFBFC;
+  --text-color: #333333;
+  --border-color: #E4E7ED;
   --accent: #fbbf24;
   --brand-black: #0b0b0b;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text-color);
+  background-color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2B2D42;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Header */
+#top-header {
+  background-color: #1E1F29;
+  padding: 10px 0;
+  color: #fff;
+  font-size: 12px;
+}
+
+#header {
+  background-color: var(--dark-color);
+  padding: 20px 0;
+  border-bottom: 3px solid var(--primary-color);
+}
+
+.navbar-brand {
+  color: #fff !important;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Navigation */
+.main-nav {
+  background: #fff;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.main-nav .nav-link {
+  color: #2B2D42;
+  font-weight: 500;
+  padding: 15px 20px;
+  transition: 0.2s color;
+}
+
+.main-nav .nav-link:hover, .main-nav .nav-link.active {
+  color: var(--primary-color);
+  background-color: transparent;
+}
+
+.main-nav .nav-link.active {
+  border-bottom: 2px solid var(--primary-color);
+}
+
+/* Buttons */
+.btn-primary-electro {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--brand-black);
+  border-radius: 40px;
+  padding: 10px 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: 0.3s all;
+}
+
+.btn-primary-electro:hover {
+  background-color: var(--brand-black);
+  color: var(--primary-color);
+  border-color: var(--brand-black);
 }
 
 /* Floating WhatsApp button */
 .whatsapp-fab{position:fixed;right:18px;bottom:18px;background:var(--accent);color:var(--brand-black);width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,0.12);z-index:1000;text-decoration:none;border:3px solid var(--brand-black)}
 
-@media(min-width:900px){
+/* Footer */
+footer {
+  background-color: var(--dark-color);
+  color: #B9BABC;
+  padding-top: 60px;
+}
+
+footer h3 {
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+footer a {
+  color: #B9BABC;
+  transition: 0.2s color;
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: var(--primary-color);
 }
 
 /* Estilo para forzar las imágenes de la galería a ser cuadradas */
