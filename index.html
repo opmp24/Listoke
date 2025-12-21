@@ -9,188 +9,102 @@
   <link rel="manifest" href="/Segured/manifest.json">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/Segured/css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    /* Hero Section */
-    .hero-section {
-      background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2070&auto=format&fit=crop');
-      background-size: cover;
-      background-position: center;
-      padding: 100px 0;
-      color: white;
-      position: relative;
-    }
-    .hero-section::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.6);
-    }
-    .hero-section .container {
-      position: relative;
-      z-index: 2;
-    }
-    .hero-section h1 {
-      color: #fff;
-      font-size: 48px;
-    }
-
-    /* Product Card */
-    .product {
-      border: 1px solid var(--border-color);
-      text-align: center;
-      transition: 0.3s box-shadow;
-      background: #fff;
-    }
-    .product:hover {
-      box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
-    }
-    .product-img {
-      position: relative;
-      overflow: hidden;
-    }
-    .product-img img {
-      width: 100%;
-      transition: 0.3s transform;
-    }
-    .product:hover .product-img img {
-      transform: scale(1.1);
-    }
-    .product-body {
-      padding: 20px;
-    }
-    .product-category {
-      font-size: 12px;
-      color: #8D99AE;
-    }
-    .product-name {
-      text-transform: uppercase;
-      font-size: 14px;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="d-flex flex-column min-vh-100">
-  <header>
-    <!-- Top Header -->
-    <div id="top-header">
-      <div class="container">
-        <ul class="list-inline mb-0 text-end">
-          <li class="list-inline-item me-3"><small>+56 9 9077 2964</small></li>
-          <li class="list-inline-item"><small>contacto@segured.cl</small></li>
+  <nav class="navbar navbar-expand-lg" style="background:var(--accent);">
+    <div class="container">
+      <a class="navbar-brand text-dark" href="/Segured/"><img src="/Segured/assets/images/logo.svg" height="32" class="me-2 align-middle" alt="logo">Seguridad Laboral</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link text-dark" href="/Segured/pages/about.html">A qué nos dedicamos</a></li>
+          <li class="nav-item"><a class="nav-link text-dark" href="/Segured/pages/documents.html">Documentos</a></li>
+          <li class="nav-item"><a class="nav-link text-dark" href="/Segured/pages/gallery.html">Galería</a></li>
+          <li class="nav-item"><a class="nav-link text-dark" href="/Segured/pages/rrss.html">RRSS</a></li>
+          <li class="nav-item"><a class="nav-link text-dark" href="/Segured/pages/contact.html">Contacto</a></li>
+          <li class="nav-item ms-lg-2">
+            <button id="installBtn" class="btn btn-sm btn-outline-dark" style="display: none;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download me-1" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+              Instalar App
+            </button>
+          </li>
         </ul>
       </div>
     </div>
+  </nav>
 
-    <!-- Main Header -->
-    <div id="header">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-md-3">
-            <a class="navbar-brand" href="/Segured/">
-              <img src="/Segured/assets/images/logo.svg" height="40" class="me-2 align-middle" alt="logo">
-              SL
-            </a>
-          </div>
-          <div class="col-md-9">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg main-nav p-0">
-      <div class="container">
-        <button class="navbar-toggler my-2" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navMain">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item"><a class="nav-link active" href="/Segured/">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="/Segured/pages/about.html">A qué nos dedicamos</a></li>
-            <li class="nav-item"><a class="nav-link" href="/Segured/pages/documents.html">Documentos</a></li>
-            <li class="nav-item"><a class="nav-link" href="/Segured/pages/gallery.html">Galería</a></li>
-            <li class="nav-item"><a class="nav-link" href="/Segured/pages/rrss.html">RRSS</a></li>
-            <li class="nav-item"><a class="nav-link" href="/Segured/pages/contact.html">Contacto</a></li>
-          </ul>
-          <div class="d-flex align-items-center py-2 py-lg-0">
-              <button id="installBtn" class="btn btn-sm btn-primary-electro" style="display: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download me-1" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
-                Instalar App
-              </button>
+  <main class="container py-4">
+    <section id="inicio" class="mb-4">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <h1 class="display-5 fw-bold">Protección en el trabajo, simple y efectiva.</h1>
+          <p class="lead">Soluciones integrales en prevención de riesgos laborales — formación, auditorías y más.</p>
+          <div class="mt-3">
+            <a class="btn btn-dark me-2" href="pages/about.html">Saber más</a>
+            <a class="btn btn-outline-dark" href="pages/contact.html">Contacto</a>
           </div>
         </div>
-      </div>
-    </nav>
-  </header>
-
-  <main>
-    <!-- Hero Section -->
-    <section class="hero-section text-center">
-      <div class="container">
-        <p class="text-uppercase fw-bold" style="color: var(--primary-color);">Lorem Ipsum Dolor</p>
-        <h1 class="fw-bold mb-4">Lorem ipsum dolor sit amet consectetur</h1>
-        <p class="lead mb-4">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-        <a href="/Segured/pages/about.html" class="btn btn-primary-electro">Saber más</a>
+        <div class="col-lg-5 d-none d-lg-block">
+          <img src="/Segured/assets/images/safety-helmet.svg" class="img-fluid rounded shadow" alt="hero">
+        </div>
       </div>
     </section>
 
-    <!-- Featured Products Section -->
-    <section class="py-5">
-      <div class="container">
-        <div class="row mb-4">
-          <div class="col-md-12 text-center">
-            <h2>Nuestros Servicios</h2>
-            <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+    <section class="py-4 my-3 bg-light rounded">
+      <div class="p-md-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h3 class="mb-1">Cool tech from top brands</h3>
+            <p class="mb-0 text-muted">Productos y soluciones recomendadas para mantener la seguridad laboral.</p>
+          </div>
+          <div><a class="btn btn-warning" href="pages/gallery.html">Ver galería</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Nuevo en tienda</h2>
+      <div class="row row-cols-1 row-cols-md-4 g-3">
+        <div class="col">
+          <div class="card h-100">
+            <img src="/Segured/assets/images/safety-helmet.svg" class="card-img-top bg-light p-3" alt="item">
+            <div class="card-body">
+              <h5 class="card-title">Equipo de protección</h5>
+              <p class="text-muted small">Desde cascos hasta arneses certificados.</p>
+              <a class="btn btn-outline-secondary btn-sm">Agregar</a>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <!-- Product -->
-          <div class="col-md-4 col-lg-3 mb-4">
-            <div class="product">
-              <div class="product-img">
-                <img src="/Segured/assets/images/safety-helmet.svg" alt="Servicio 1" class="p-4 bg-light">
-              </div>
-              <div class="product-body">
-                <p class="product-category">Categoría</p>
-                <h5 class="product-name"><a href="#">Equipo de protección</a></h5>
-              </div>
+        <div class="col">
+          <div class="card h-100">
+            <img src="/Segured/assets/images/safety-sign.svg" class="card-img-top bg-light p-3" alt="item">
+            <div class="card-body">
+              <h5 class="card-title">Detectores</h5>
+              <p class="text-muted small">Detectores portátiles para ambientes industriales.</p>
+              <a class="btn btn-outline-secondary btn-sm">Agregar</a>
             </div>
           </div>
-          <!-- /Product -->
-          <div class="col-md-4 col-lg-3 mb-4">
-            <div class="product">
-              <div class="product-img">
-                <img src="/Segured/assets/images/safety-sign.svg" alt="Servicio 2" class="p-4 bg-light">
-              </div>
-              <div class="product-body">
-                <p class="product-category">Categoría</p>
-                <h5 class="product-name"><a href="#">Señalización</a></h5>
-              </div>
+        </div>
+        <div class="col">
+          <div class="card h-100">
+            <img src="/Segured/assets/images/fire-extinguisher.svg" class="card-img-top bg-light p-3" alt="item">
+            <div class="card-body">
+              <h5 class="card-title">Capacitación</h5>
+              <p class="text-muted small">Cursos y certificaciones en línea.</p>
+              <a class="btn btn-outline-secondary btn-sm">Agregar</a>
             </div>
           </div>
-          <div class="col-md-4 col-lg-3 mb-4">
-            <div class="product">
-              <div class="product-img">
-                <img src="/Segured/assets/images/fire-extinguisher.svg" alt="Servicio 3" class="p-4 bg-light">
-              </div>
-              <div class="product-body">
-                <p class="product-category">Categoría</p>
-                <h5 class="product-name"><a href="#">Extintores</a></h5>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-lg-3 mb-4">
-            <div class="product">
-              <div class="product-img">
-                <img src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?q=80&w=400&auto=format&fit=crop" alt="Servicio 4" style="aspect-ratio: 1/1; object-fit: cover;">
-              </div>
-              <div class="product-body">
-                <p class="product-category">Categoría</p>
-                <h5 class="product-name"><a href="#">Consultoría</a></h5>
-              </div>
+        </div>
+        <div class="col">
+          <div class="card h-100">
+            <img src="/Segured/assets/images/safety-helmet.svg" class="card-img-top bg-light p-3" alt="item">
+            <div class="card-body">
+              <h5 class="card-title">Inspecciones</h5>
+              <p class="text-muted small">Servicios de auditoría y seguimiento.</p>
+              <a class="btn btn-outline-secondary btn-sm">Agregar</a>
             </div>
           </div>
         </div>
@@ -198,41 +112,27 @@
     </section>
   </main>
 
-  <footer class="mt-auto">
-    <div class="container py-5">
+  <footer class="bg-dark text-white py-5 mt-auto">
+    <div class="container">
       <div class="row">
-        <div class="col-md-4 mb-4">
-          <h3>Lorem Ipsum</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
-          <ul class="list-unstyled mt-4">
-            <li class="mb-2"><i class="bi bi-geo-alt me-2 text-danger"></i> Av. Seguridad 123, Santiago</li>
-            <li class="mb-2"><i class="bi bi-telephone me-2 text-danger"></i> +56 9 9077 2964</li>
-            <li class="mb-2"><i class="bi bi-envelope me-2 text-danger"></i> contacto@segured.cl</li>
-          </ul>
+        <div class="col-md-6 mb-4 mb-md-0">
+          <h3 class="fw-bold mb-4">Información de contacto</h3>
+          <p class="mb-4 text-white-50">Estamos disponibles para responder tus dudas sobre seguridad laboral.</p>
         </div>
-        <div class="col-md-4 mb-4">
-          <h3>Categorías</h3>
-          <ul class="list-unstyled">
-            <li><a href="#">Lorem Ipsum</a></li>
-            <li><a href="#">Dolor Sit</a></li>
-            <li><a href="#">Amet Consectetur</a></li>
-            <li><a href="#">Adipisicing Elit</a></li>
-          </ul>
+        <div class="col-md-6">
+          <div class="d-flex mb-3">
+            <div class="me-3 text-warning"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg></div>
+            <div><h6 class="fw-bold mb-0">Dirección</h6><small class="text-white-50">Av. Seguridad 123, Santiago</small></div>
+          </div>
+          <div class="d-flex mb-3">
+            <div class="me-3 text-warning"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/></svg></div>
+            <div><h6 class="fw-bold mb-0">Email</h6><small class="text-white-50">contacto@segured.cl</small></div>
+          </div>
+          <div class="d-flex">
+            <div class="me-3 text-warning"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/></svg></div>
+            <div><h6 class="fw-bold mb-0">Teléfono</h6><small class="text-white-50">+56 9 9077 2964</small></div>
+          </div>
         </div>
-        <div class="col-md-4 mb-4">
-          <h3>Información</h3>
-          <ul class="list-unstyled">
-            <li><a href="/Segured/pages/about.html">A qué nos dedicamos</a></li>
-            <li><a href="/Segured/pages/documents.html">Documentos</a></li>
-            <li><a href="/Segured/pages/gallery.html">Galería</a></li>
-            <li><a href="/Segured/pages/contact.html">Contacto</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div style="background-color: #1E1F29; padding: 20px 0;">
-      <div class="container text-center">
-        <small class="text-muted">© 2024 Seguridad Laboral. All Rights Reserved.</small>
       </div>
     </div>
   </footer>
