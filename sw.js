@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sl-demo-v17'; // Incrementamos versión
+const CACHE_NAME = 'sl-demo-v20'; // Versión corregida y actualizada
 const REPO_PREFIX = '/Segured/'; // Definimos el prefijo
 const ASSETS = [
   './', // Esto cachea el index.html en la raíz del repo

@@ -1,80 +1,67 @@
+/**
+ * EXPLICACIÓN DE LA INTEGRACIÓN (MASTER PAGE):
+ * 
+ * 1. El disparador: Cada página secundaria (ej: about.html) carga este script: <script src="../js/main.js" defer></script>.
+ *    Esto le dice al navegador: "Sal de la carpeta pages, entra a la carpeta js y ejecuta main.js".
+ * 
+ * 2. La acción (main.js): Este archivo ejecuta una petición fetch('../index.html').
+ *    Le dice al navegador: "Sube un nivel (a la raíz) y dame el contenido de index.html".
+ * 
+ * 3. La inyección: Una vez que obtiene el index.html, extrae el <nav> y el <footer> y los pega en la página actual.
+ */
 document.addEventListener('DOMContentLoaded', async () => {
-    // On sub-pages, load the master header and footer
-    const path = window.location.pathname;
-    if (path.endsWith('/') || path.endsWith('/index.html')) {
-        return; // Do nothing on the main page
+    const nav = document.querySelector('nav');
+    const footer = document.querySelector('footer');
+
+    // Si el nav ya tiene contenido (ej. en index.html), no hacemos nada.
+    if (nav && nav.children.length > 0) {
+        return;
+    }
+
+    // Advertencia si se abre como archivo local.
+    if (window.location.protocol === 'file:') {
+        console.warn('El menú no se puede cargar usando el protocolo file:// por seguridad. Usa un servidor local (Live Server).');
+        if(nav) nav.innerHTML = '<div class="alert alert-warning m-3">El menú no se puede cargar desde un archivo local. Por favor, usa un servidor web (como Live Server en VS Code).</div>';
+        return;
     }
 
     try {
-        // Detectar si estamos en GitHub Pages (/Segured/) o local (/)
-        const repoPrefix = window.location.pathname.includes('/Segured/') ? '/Segured' : '';
-        const response = await fetch(`${repoPrefix}/index.html`);
-        if (!response.ok) throw new Error('Could not fetch master template.');
+        // Cargamos index.html desde el directorio padre (../index.html)
+        const response = await fetch('../index.html');
+        if (!response.ok) throw new Error(`Error ${response.status} al cargar la plantilla.`);
         
         const text = await response.text();
-        const masterDoc = new DOMParser().parseFromString(text, 'text/html');
+        const doc = new DOMParser().parseFromString(text, 'text/html');
 
-        // Find master elements
-        const masterHeader = masterDoc.querySelector('header');
-        const masterFooter = masterDoc.querySelector('footer');
-        const masterWhatsapp = masterDoc.querySelector('.whatsapp-fab');
-
-        // Find placeholders in the current page
-        const headerPlaceholder = document.querySelector('header');
-        const footerPlaceholder = document.querySelector('footer');
-
-        // Replace content
-        if (masterHeader && headerPlaceholder) {
-            headerPlaceholder.replaceWith(masterHeader);
-        }
-        if (masterFooter && footerPlaceholder) {
-            footerPlaceholder.replaceWith(masterFooter);
-        }
-        if (masterWhatsapp) {
-            document.body.appendChild(masterWhatsapp.cloneNode(true));
+        // Inyectamos el Nav
+        const masterNav = doc.querySelector('nav');
+        if (masterNav && nav) {
+            nav.replaceWith(masterNav);
         }
 
-        // --- Post-load initializations ---
+        // Inyectamos el Footer
+        const masterFooter = doc.querySelector('footer');
+        if (masterFooter && footer) {
+            footer.replaceWith(masterFooter);
+        }
 
-        // 1. Set the active navigation link
-        const navLinks = document.querySelectorAll('.main-nav .nav-link');
-        let homeLink;
-        navLinks.forEach(link => {
-            const linkPath = new URL(link.href).pathname;
-            if (linkPath === '/Segured/' || linkPath === '/Segured/index.html') {
-                homeLink = link;
-            }
-            if (linkPath === path) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
+        // Inyectamos el botón de WhatsApp
+        const masterWa = doc.querySelector('.whatsapp-fab');
+        if (masterWa && !document.querySelector('.whatsapp-fab')) {
+            document.body.appendChild(masterWa);
+        }
+
+        // Marcamos el link activo en el menú
+        const currentHref = window.location.href;
+        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+            link.classList.toggle('active', link.href === currentHref);
         });
-        // The master template has 'Home' as active, so if we are on another page, deactivate it.
-        if (homeLink && ! (path === '/Segured/' || path === '/Segured/index.html')) {
-            homeLink.classList.remove('active');
-        }
 
-        // 2. Initialize PWA install button logic (copied from app.js for sub-pages)
-        let deferredPrompt;
-        const installBtn = document.getElementById('installBtn');
-        if (installBtn) {
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                installBtn.style.display = 'block';
-            });
-            installBtn.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    await deferredPrompt.userChoice;
-                    deferredPrompt = null;
-                    installBtn.style.display = 'none';
-                }
-            });
-        }
+        // Reactivamos funcionalidades globales que se pierden al reemplazar el nav
+        if (window.loadCustomInstallIcon) window.loadCustomInstallIcon();
+        if (window.checkInstallButton) window.checkInstallButton();
 
     } catch (error) {
-        console.error('Failed to load page template:', error);
+        console.error('Error cargando la página maestra:', error);
     }
 });

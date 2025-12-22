@@ -1,61 +1,56 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // On sub-pages, load the master header and footer
-    const path = window.location.pathname;
-    // Verificamos si estamos dentro de la carpeta 'pages'
-    if (!path.includes('/pages/')) {
+    const nav = document.querySelector('nav');
+    const footer = document.querySelector('footer');
+
+    // Si el nav ya tiene contenido (ej. en index.html), no hacemos nada.
+    if (nav && nav.children.length > 0) {
+        return;
+    }
+
+    // Advertencia si se abre como archivo local.
+    if (window.location.protocol === 'file:') {
+        console.warn('El menú no se puede cargar usando el protocolo file:// por seguridad. Usa un servidor local (Live Server).');
+        if(nav) nav.innerHTML = '<div class="alert alert-warning m-3">El menú no se puede cargar desde un archivo local. Por favor, usa un servidor web (como Live Server en VS Code).</div>';
         return;
     }
 
     try {
-        // Usamos ruta relativa para subir un nivel desde /pages/ a la raíz
+        // Cargamos index.html desde el directorio padre (../index.html)
         const response = await fetch('../index.html');
-        if (!response.ok) throw new Error('Could not fetch master template.');
+        if (!response.ok) throw new Error(`Error ${response.status} al cargar la plantilla.`);
         
         const text = await response.text();
-        const masterDoc = new DOMParser().parseFromString(text, 'text/html');
+        const doc = new DOMParser().parseFromString(text, 'text/html');
 
-        // Find master elements (Buscamos NAV, no HEADER)
-        const masterNav = masterDoc.querySelector('nav');
-        const masterFooter = masterDoc.querySelector('footer');
-        const masterWhatsapp = masterDoc.querySelector('.whatsapp-fab');
-
-        // Find placeholders in the current page (Buscamos NAV)
-        const navPlaceholder = document.querySelector('nav');
-        const footerPlaceholder = document.querySelector('footer');
-
-        // Replace content
-        if (masterNav && navPlaceholder) {
-            navPlaceholder.replaceWith(masterNav);
-        }
-        if (masterFooter && footerPlaceholder) {
-            footerPlaceholder.replaceWith(masterFooter);
-        }
-        if (masterWhatsapp) {
-            if (!document.querySelector('.whatsapp-fab')) {
-                document.body.appendChild(masterWhatsapp.cloneNode(true));
-            }
+        // Inyectamos el Nav
+        const masterNav = doc.querySelector('nav');
+        if (masterNav && nav) {
+            nav.replaceWith(masterNav);
         }
 
-        // --- Post-load initializations ---
+        // Inyectamos el Footer
+        const masterFooter = doc.querySelector('footer');
+        if (masterFooter && footer) {
+            footer.replaceWith(masterFooter);
+        }
 
-        // 1. Set the active navigation link
-        // Usamos .navbar-nav porque es la clase que tiene tu index.html
-        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-        
-        navLinks.forEach(link => {
-            // Comparamos la URL completa para asegurar coincidencia exacta
-            if (link.href === window.location.href) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
+        // Inyectamos el botón de WhatsApp
+        const masterWa = doc.querySelector('.whatsapp-fab');
+        if (masterWa && !document.querySelector('.whatsapp-fab')) {
+            document.body.appendChild(masterWa);
+        }
+
+        // Marcamos el link activo en el menú
+        const currentHref = window.location.href;
+        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+            link.classList.toggle('active', link.href === currentHref);
         });
 
-        // 2. Reactivar funcionalidades globales (Iconos y PWA) usando las funciones de app.js
+        // Reactivamos funcionalidades globales que se pierden al reemplazar el nav
         if (window.loadCustomInstallIcon) window.loadCustomInstallIcon();
         if (window.checkInstallButton) window.checkInstallButton();
 
     } catch (error) {
-        console.error('Failed to load page template:', error);
+        console.error('Error cargando la página maestra:', error);
     }
 });
