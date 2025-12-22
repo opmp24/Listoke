@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        // Cargamos index.html desde el directorio padre (../index.html)
-        const response = await fetch('../index.html');
+        // Cargamos index.html desde el directorio actual (pages/)
+        const response = await fetch('index.html');
         if (!response.ok) throw new Error(`Error ${response.status} al cargar la plantilla.`);
         
         const text = await response.text();

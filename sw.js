@@ -1,8 +1,8 @@
 const CACHE_NAME = 'sl-demo-v20'; // Versión corregida y actualizada
 const REPO_PREFIX = '/Segured/'; // Definimos el prefijo
 const ASSETS = [
-  './', // Esto cachea el index.html en la raíz del repo
-  'index.html',
+  'pages/', // Cachea el directorio de páginas, que debería servir el nuevo index.
+  'pages/index.html',
   'drive-config.js',
   'favicon.svg',
   'css/style.css',
