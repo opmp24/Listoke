@@ -225,23 +225,67 @@
 
     // Carga el video de YouTube y lo añade a la pestaña de videos
     try {
-      const specificVideoId = window.DRIVE_CONFIG.latestVideoId;
-      if (videoGridEl && specificVideoId) {
-        // No limpiamos el grid aquí para poder añadir videos de Drive y de YouTube
-        
-        const col = document.createElement('div');
-        col.className = 'col';
-        const item = document.createElement('a');
-        item.href = '#';
-        item.innerHTML = `<img src="https://img.youtube.com/vi/${specificVideoId}/mqdefault.jpg" class="gallery-item-img" alt="Video de YouTube">`;
+      const { apiKey, youtubeChannelId, latestVideoId } = window.DRIVE_CONFIG;
+      
+      if (videoGridEl && apiKey) {
+        const ytFragment = document.createDocumentFragment();
+        let hasYtVideos = false;
 
-        item.onclick = (e) => {
-          e.preventDefault();
-          openInModal('video', `https://www.youtube-nocookie.com/embed/${specificVideoId}?autoplay=1`, 'Video de YouTube');
-        };
-        col.appendChild(item);
-        // Añadimos el video de YouTube al principio de la lista de videos
-        videoGridEl.prepend(col);
+        // 1. Intentar cargar lista de videos del canal (Uploads Playlist)
+        if (youtubeChannelId) {
+          try {
+            // Convertir ID de canal (UC...) a ID de playlist de subidas (UU...)
+            const uploadsId = youtubeChannelId.replace(/^UC/, 'UU');
+            const ytUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsId}&maxResults=12&key=${apiKey}`;
+            
+            const resp = await fetch(ytUrl);
+            if (resp.ok) {
+              const data = await resp.json();
+              if (data.items && data.items.length > 0) {
+                hasYtVideos = true;
+                data.items.forEach(item => {
+                  const vid = item.snippet.resourceId.videoId;
+                  const title = item.snippet.title;
+                  const thumb = item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default?.url;
+                  
+                  const col = document.createElement('div');
+                  col.className = 'col';
+                  const link = document.createElement('a');
+                  link.href = '#';
+                  link.innerHTML = `<img src="${thumb}" class="gallery-item-img" alt="${title}">`;
+                  link.onclick = (e) => {
+                    e.preventDefault();
+                    openInModal('video', `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1`, title);
+                  };
+                  col.appendChild(link);
+                  ytFragment.appendChild(col);
+                });
+              }
+            }
+          } catch (err) {
+            console.error('Error API YouTube:', err);
+          }
+        }
+
+        // 2. Fallback a video único si no se cargó lista
+        if (!hasYtVideos && latestVideoId) {
+           const col = document.createElement('div');
+           col.className = 'col';
+           const link = document.createElement('a');
+           link.href = '#';
+           link.innerHTML = `<img src="https://img.youtube.com/vi/${latestVideoId}/mqdefault.jpg" class="gallery-item-img" alt="Video Destacado">`;
+           link.onclick = (e) => {
+             e.preventDefault();
+             openInModal('video', `https://www.youtube-nocookie.com/embed/${latestVideoId}?autoplay=1`, 'Video Destacado');
+           };
+           col.appendChild(link);
+           ytFragment.appendChild(col);
+        }
+
+        // Insertar al principio del grid
+        if (ytFragment.children.length > 0) {
+          videoGridEl.prepend(ytFragment);
+        }
       }
     } catch (e) {
       console.error('Error al cargar videos de YouTube:', e);
