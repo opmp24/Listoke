@@ -3,6 +3,7 @@ const REPO_PREFIX = '/Segured/'; // Definimos el prefijo
 const ASSETS = [
   'pages/', // Cachea el directorio de páginas, que debería servir el nuevo index.
   'pages/index.html',
+  'pages/layout.html',
   'drive-config.js',
   'favicon.svg',
   'css/style.css',

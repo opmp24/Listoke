@@ -1,43 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   
-  // --- Lógica de Instalación de la PWA ---
-  let deferredPrompt;
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    // Previene que el mini-infobar aparezca en móviles
-    e.preventDefault();
-    // Guarda el evento para que pueda ser disparado más tarde
-    deferredPrompt = e;
-    // Intenta mostrar el botón (si ya existe en el DOM)
-    window.checkInstallButton();
-  });
-
-  // Función global para verificar y mostrar el botón
-  window.checkInstallButton = () => {
-    const btn = document.getElementById('installBtn');
-    if (btn && deferredPrompt) {
-      btn.style.display = 'block';
-    }
-  };
-
-  // Delegación de eventos para el click (funciona aunque el botón se reemplace)
-  document.addEventListener('click', async (e) => {
-    const btn = e.target.closest('#installBtn');
-    if (btn && deferredPrompt) {
-      // Oculta nuestro botón de instalación
-      btn.style.display = 'none';
-      // Muestra el prompt de instalación del navegador
-      deferredPrompt.prompt();
-      // Espera a que el usuario responda
-      await deferredPrompt.userChoice;
-      // El prompt ya no se puede usar, lo descartamos
-      deferredPrompt = null;
-    }
-  });
-
-  // Intentamos cargar el icono personalizado inmediatamente (para el logo y botón)
-  loadCustomInstallIcon();
-
   // --- Carga del Icono de Instalación desde Google Drive ---
   window.loadCustomInstallIcon = async function() {
     // Salimos si no hay configuración o carpeta de iconos definida
@@ -82,4 +44,44 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Error al cargar el icono de instalación personalizado:', error);
     }
   }
+
+  // --- Lógica de Instalación de la PWA ---
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Previene que el mini-infobar aparezca en móviles
+    e.preventDefault();
+    // Guarda el evento para que pueda ser disparado más tarde
+    deferredPrompt = e;
+    // Intenta mostrar el botón (si ya existe en el DOM)
+    window.checkInstallButton();
+  });
+
+  // Función global para verificar y mostrar el botón
+  window.checkInstallButton = () => {
+    const btn = document.getElementById('installBtn');
+    if (btn && deferredPrompt) {
+      btn.style.display = 'block';
+    }
+  };
+
+  // Delegación de eventos para el click (funciona aunque el botón se reemplace)
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('#installBtn');
+    if (btn && deferredPrompt) {
+      // Oculta nuestro botón de instalación
+      btn.style.display = 'none';
+      // Muestra el prompt de instalación del navegador
+      deferredPrompt.prompt();
+      // Espera a que el usuario responda
+      await deferredPrompt.userChoice;
+      // El prompt ya no se puede usar, lo descartamos
+      deferredPrompt = null;
+    }
+  });
+
+  // Intentamos cargar el icono personalizado inmediatamente (para el logo y botón)
+  // La función ahora está definida en window, la llamamos a través de él.
+  window.loadCustomInstallIcon();
+
 });
