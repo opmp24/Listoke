@@ -47,8 +47,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Inyectamos el botón de WhatsApp
         const masterWa = doc.querySelector('.whatsapp-fab');
-        if (masterWa && !document.querySelector('.whatsapp-fab')) {
-            document.body.appendChild(masterWa);
+        const waPlaceholder = document.getElementById('whatsapp-placeholder');
+        if (masterWa) {
+            if (waPlaceholder) {
+                waPlaceholder.replaceWith(masterWa);
+            } else if (!document.querySelector('.whatsapp-fab')) {
+                document.body.appendChild(masterWa);
+            }
         }
 
         // Marcamos el link activo en el menú
