@@ -7,7 +7,7 @@ const ASSETS = [
   'favicon.svg',
   'css/style.css',
   'app.js',
-  'js/main.js',
+  'main.js',
   'manifest.json',
   'icons/icon-192.svg',
   'icons/icon-512.svg',
