@@ -4,8 +4,8 @@
  * 1. El disparador: Cada página secundaria (ej: about.html) carga este script: <script src="../js/main.js" defer></script>.
  *    Esto le dice al navegador: "Sal de la carpeta pages, entra a la carpeta js y ejecuta main.js".
  * 
- * 2. La acción (main.js): Este archivo ejecuta una petición fetch('../index.html').
- *    Le dice al navegador: "Sube un nivel (a la raíz) y dame el contenido de index.html".
+ * 2. La acción (main.js): Este archivo ejecuta una petición fetch('index.html').
+ *    Le dice al navegador: "Desde la página actual (en /pages), dame el contenido de index.html (que también está en /pages)".
  * 
  * 3. La inyección: Una vez que obtiene el index.html, extrae el <nav> y el <footer> y los pega en la página actual.
  */
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        // Cargamos index.html desde el directorio actual (pages/)
+        // Cargamos index.html desde el directorio actual (pages/) ya que index.html ahora vive allí
         const response = await fetch('index.html');
         if (!response.ok) throw new Error(`Error ${response.status} al cargar la plantilla.`);
         
