@@ -1,57 +1,63 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // Si estamos en la página de inicio (index.html o raíz), no hacemos nada
-    // porque ya tiene el header y footer originales.
+    // On sub-pages, load the master header and footer
     const path = window.location.pathname;
-    if (!path.includes('/pages/')) {
-        return;
+    if (path.endsWith('/') || path.endsWith('/index.html')) {
+        return; // Do nothing on the main page
     }
 
     try {
-        // 1. Obtenemos el contenido de index.html (la "Master Page")
-        // Usamos '../index.html' porque estamos dentro de la carpeta 'pages/'
         const response = await fetch('../index.html');
-        if (!response.ok) throw new Error('No se pudo cargar la página maestra.');
+        if (!response.ok) throw new Error('Could not fetch master template.');
         
         const text = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
+        const masterDoc = new DOMParser().parseFromString(text, 'text/html');
 
-        // 2. Extraemos e inyectamos el Header (Nav)
-        const masterNav = doc.querySelector('nav');
-        const targetNav = document.querySelector('nav');
-        if (masterNav && targetNav) {
-            targetNav.replaceWith(masterNav);
+        // Find master elements
+        const masterNav = masterDoc.querySelector('nav');
+        const masterFooter = masterDoc.querySelector('footer');
+        const masterWhatsapp = masterDoc.querySelector('.whatsapp-fab');
+
+        // Find placeholders in the current page
+        const navPlaceholder = document.querySelector('nav');
+        const footerPlaceholder = document.querySelector('footer');
+
+        // Replace content
+        if (masterNav && navPlaceholder) {
+            navPlaceholder.replaceWith(masterNav);
+        }
+        if (masterFooter && footerPlaceholder) {
+            footerPlaceholder.replaceWith(masterFooter);
+        }
+        if (masterWhatsapp) {
+            document.body.appendChild(masterWhatsapp.cloneNode(true));
         }
 
-        // 3. Extraemos e inyectamos el Footer
-        const masterFooter = doc.querySelector('footer');
-        const targetFooter = document.querySelector('footer');
-        if (masterFooter && targetFooter) {
-            targetFooter.replaceWith(masterFooter);
-        }
+        // --- Post-load initializations ---
 
-        // 4. Extraemos e inyectamos el botón de WhatsApp si no existe
-        const masterWa = doc.querySelector('.whatsapp-fab');
-        if (masterWa && !document.querySelector('.whatsapp-fab')) {
-            document.body.appendChild(masterWa);
-        }
-
-        // 5. Actualizamos el enlace activo del menú
-        const navLinks = document.querySelectorAll('.nav-link');
+        // 1. Set the active navigation link
+        const navLinks = document.querySelectorAll('.main-nav .nav-link');
+        let homeLink;
         navLinks.forEach(link => {
-            // Comparamos la URL completa para asegurar coincidencia
-            if (link.href === window.location.href) {
+            const linkPath = new URL(link.href).pathname;
+            if (linkPath === '/Segured/' || linkPath === '/Segured/index.html') {
+                homeLink = link;
+            }
+            if (linkPath === path) {
                 link.classList.add('active');
             } else {
                 link.classList.remove('active');
             }
         });
+        // The master template has 'Home' as active, so if we are on another page, deactivate it.
+        if (homeLink && ! (path === '/Segured/' || path === '/Segured/index.html')) {
+            homeLink.classList.remove('active');
+        }
 
         // 6. Reactivar funcionalidades globales (Iconos y PWA)
         if (window.loadCustomInstallIcon) window.loadCustomInstallIcon();
         if (window.checkInstallButton) window.checkInstallButton();
 
     } catch (error) {
-        console.error('Error cargando elementos de la página maestra:', error);
+        console.error('Failed to load page template:', error);
     }
 });
