@@ -75,12 +75,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function initScrollAnimations() {
+    // Verificamos si anime.js está cargado
+    if (typeof anime === 'undefined') return;
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                // Opcional: dejar de observar una vez animado
-                // observer.unobserve(entry.target);
+                anime({
+                    targets: entry.target,
+                    translateY: [50, 0], // Desde 50px abajo hacia su posición original
+                    opacity: [0, 1],     // Desde invisible a visible
+                    duration: 1000,      // 1 segundo de duración
+                    easing: 'easeOutExpo' // Efecto de frenado suave característico de Anime.js
+                });
+                observer.unobserve(entry.target); // Animamos solo una vez
             }
         });
     }, { threshold: 0.1 });

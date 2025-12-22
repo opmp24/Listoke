@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sl-demo-v21-stable'; // Versión estable con nuevo diseño
+const CACHE_NAME = 'sl-demo-v22-icons'; // Actualización de iconos
 const REPO_PREFIX = '/Segured/'; // Definimos el prefijo
 const ASSETS = [
   'pages/', // Cachea el directorio de páginas, que debería servir el nuevo index.
