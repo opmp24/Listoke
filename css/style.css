@@ -83,12 +83,77 @@ body {
 @media(min-width:900px){
 }
 
-/* Estilo para forzar las imágenes de la galería a ser cuadradas */
-.gallery-item-img {
+/* --- Estilos para Galería Moderna --- */
+#gallery-grid .col, #videos-grid .col {
+  min-height: 150px; /* Altura mínima para el estado de carga */
+}
+
+#gallery-grid a, #videos-grid a {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  border-radius: 0; /* Manteniendo el estilo industrial */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #f0f0f0; /* Un fondo para el aspect-ratio */
+}
+
+#gallery-grid a:hover, #videos-grid a:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+.gallery-item-img { /* Se aplica a la <img> dentro del <a> */
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   cursor: pointer;
+  transition: transform 0.4s ease;
+}
+
+#gallery-grid a:hover .gallery-item-img, 
+#videos-grid a:hover .gallery-item-img {
+  transform: scale(1.05);
+}
+
+#gallery-grid a::after, #videos-grid a::after {
+  font-family: 'bootstrap-icons';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none; /* Para que no interfiera con el click */
+  z-index: 2;
+}
+
+#gallery-grid a[data-type="image"]::after {
+    content: '\F52A'; /* Bootstrap Icons: search */
+}
+
+#videos-grid a[data-type="video"]::after {
+    content: '\F4F7'; /* Bootstrap Icons: play-circle-fill */
+}
+
+#gallery-grid a:hover::before, #videos-grid a:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+#gallery-grid a:hover::after, #videos-grid a:hover::after {
+  opacity: 1;
 }
 
 /* --- Nuevos Estilos para Index Completo --- */
