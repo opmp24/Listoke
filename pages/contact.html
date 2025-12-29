@@ -1,0 +1,136 @@
+<!-- Página de contacto con formulario y mapa de ubicación cargado dinámicamente desde Drive.
+     Depende de drive-config.js para obtener la dirección y se integra con el diseño general. -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#fbbf24" />
+  <title>Contacto — Seguridad Laboral</title>
+  <link rel="icon" href="/Segured/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/Segured/manifest.json">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/Segured/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+ </head>
+ <body class="d-flex flex-column min-vh-100">
+  <nav></nav>
+
+  <main class="container py-5 reveal">
+    <div class="row justify-content-center mb-5">
+      <div class="col-lg-10">
+        <div class="card shadow border-0 overflow-hidden rounded-0">
+          <div class="row g-0">
+            <!-- Columna de Información -->
+            <div class="col-md-5 bg-dark text-white p-4 p-md-5 d-flex flex-column">
+              <div class="text-center mb-4">
+                <img src="/Segured/assets/images/img5.svg" alt="Contacto Segured" class="img-fluid" style="max-height: 120px; opacity: 0.8;">
+              </div>
+              <h3 class="fw-bold mb-4">Información de contacto</h3>
+              <p class="mb-4 text-white-50">Estamos disponibles para responder tus dudas sobre seguridad laboral.</p>
+              
+              <div class="d-flex mb-3">
+                <div class="me-3 text-warning"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg></div>
+                <div><h6 class="fw-bold mb-0">Dirección</h6><small class="text-white-50">Av. Seguridad 123, Santiago</small></div>
+              </div>
+              <div class="d-flex mb-3">
+                <div class="me-3 text-warning"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/></svg></div>
+                <div><h6 class="fw-bold mb-0">Email</h6><small class="text-white-50">contacto@segured.cl</small></div>
+              </div>
+              <div class="d-flex">
+                <div class="me-3 text-warning"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/></svg></div>
+                <div><h6 class="fw-bold mb-0">Teléfono</h6><small class="text-white-50">+56 9 9077 2964</small></div>
+              </div>
+            </div>
+            
+            <!-- Columna del Formulario -->
+            <div class="col-md-7 p-4 p-md-5 bg-white">
+              <h2 class="fw-bold mb-4">Envíanos un mensaje</h2>
+              <form>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="nombre" placeholder="Nombre" required>
+                      <label for="nombre">Nombre</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input type="email" class="form-control" id="email" placeholder="Email" required>
+                      <label for="email">Email</label>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="asunto" placeholder="Asunto" required>
+                      <label for="asunto">Asunto</label>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-floating">
+                      <textarea class="form-control" placeholder="Mensaje" id="mensaje" style="height: 150px" required></textarea>
+                      <label for="mensaje">Mensaje</label>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <button class="btn btn-dark w-100 py-3 fw-bold" type="submit">Enviar Mensaje</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center mt-5 reveal">
+      <div class="col-lg-10">
+        <div class="ratio ratio-21x9 shadow rounded-0 overflow-hidden">
+          <iframe id="map-frame" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer></footer>
+
+  <div id="whatsapp-placeholder"></div>
+  <script src="/Segured/drive-config.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const mapFrame = document.getElementById('map-frame');
+      // Verificamos que exista la configuración y el iframe
+      if (!mapFrame || !window.DRIVE_CONFIG || !window.DRIVE_CONFIG.apiKey) return;
+
+      const { apiKey, mapsFolderId } = window.DRIVE_CONFIG;
+
+      try {
+        // Buscamos el archivo sucursales.txt específicamente en la carpeta de mapas
+        const q = `name = 'sucursales.txt' and '${mapsFolderId}' in parents and mimeType = 'text/plain' and trashed = false`;
+        const searchUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${apiKey}`;
+        
+        const searchResp = await fetch(searchUrl);
+        const searchData = await searchResp.json();
+
+        if (searchData.files && searchData.files.length > 0) {
+          const fileId = searchData.files[0].id;
+          // Obtenemos el contenido del archivo (la dirección)
+          const contentUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${apiKey}`;
+          const contentResp = await fetch(contentUrl);
+          const address = await contentResp.text();
+
+          if (address && address.trim()) {
+            // Actualizamos el iframe con la dirección obtenida
+            mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(address.trim())}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+          }
+        }
+      } catch (error) {
+        console.error('Error cargando el mapa:', error);
+      }
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/Segured/app.js" defer></script>
+  <script src="../main.js" defer></script>
+</body>
+</html>

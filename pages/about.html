@@ -1,0 +1,81 @@
+<!-- Página informativa estática que describe la misión y servicios de la empresa.
+     Se integra con el sistema de plantillas global (nav/footer) mediante main.js. -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#fbbf24" />
+  <title>¿A qué nos dedicamos? — Seguridad Laboral</title>
+  <link rel="icon" href="/Segured/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/Segured/manifest.json">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/Segured/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <nav></nav>
+
+  <main class="container py-4">
+    <!-- Page Header -->
+    <section class="text-center py-5 reveal">
+      <span class="text-warning fw-bold text-uppercase">Nuestra Empresa</span>
+      <h1 class="display-4 fw-bold">Comprometidos con la Seguridad</h1>
+      <p class="lead text-muted col-lg-8 mx-auto">Más que una empresa, somos su socio estratégico en la creación de entornos laborales seguros y productivos.</p>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-5 my-4 reveal">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <img src="/Segured/assets/images/img1.svg" class="img-fluid shadow-lg" alt="Nuestra Misión">
+        </div>
+        <div class="col-lg-6 ps-lg-5">
+          <h2 class="display-6 fw-bold mb-4">NUESTRA MISIÓN</h2>
+          <p class="text-muted mb-4">Ofrecemos formación, auditorías y consultoría en prevención de riesgos laborales para empresas de todos los tamaños. Nuestro objetivo es reducir accidentes, cumplir la normativa y crear entornos de trabajo más seguros y productivos.</p>
+          <p class="text-muted">Nuestro enfoque se basa en tres pilares: identificar riesgos de manera proactiva, formar al personal con conocimientos prácticos y acompañar a las empresas en la implementación de medidas correctivas efectivas y sostenibles en el tiempo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="py-5 reveal">
+      <div class="text-center mb-5">
+        <span class="text-warning fw-bold text-uppercase">Nuestros Valores</span>
+        <h2 class="display-5">CULTURA DE SEGURIDAD</h2>
+      </div>
+      <div class="row g-4 justify-content-center">
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-box text-center">
+            <div class="feature-icon mb-3"><img src="/Segured/assets/images/img2.svg" alt="Compromiso" style="height: 60px;"></div>
+            <h4>Compromiso</h4>
+            <p class="text-muted">Nos implicamos a fondo en cada proyecto, entendiendo las necesidades específicas de nuestros clientes para ofrecer soluciones a medida.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-box text-center">
+            <div class="feature-icon mb-3"><img src="/Segured/assets/images/img3.svg" alt="Excelencia" style="height: 60px;"></div>
+            <h4>Excelencia</h4>
+            <p class="text-muted">Buscamos la máxima calidad en nuestros servicios, manteniéndonos actualizados con las últimas normativas y tecnologías del sector.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-box text-center">
+            <div class="feature-icon mb-3"><img src="/Segured/assets/images/img4.svg" alt="Innovación" style="height: 60px;"></div>
+            <h4>Innovación</h4>
+            <p class="text-muted">Aplicamos métodos y herramientas innovadoras para la gestión de riesgos, asegurando auditorías precisas y formación efectiva.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer></footer>
+
+  <div id="whatsapp-placeholder"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/Segured/app.js" defer></script>
+  <script src="../main.js" defer></script>
+</body>
+</html>

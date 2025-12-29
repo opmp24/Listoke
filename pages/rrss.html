@@ -1,0 +1,90 @@
+<!-- Esta página presenta la sección de Redes Sociales, cargando dinámicamente el feed de Instagram a través de su API.
+     Se integra con el diseño general (nav/footer) y depende de drive-config.js para la configuración de credenciales. -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#fbbf24" />
+  <title>RRSS — Seguridad Laboral</title>
+  <link rel="icon" href="/Segured/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/Segured/manifest.json">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/Segured/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <nav></nav>
+
+  <main class="container py-5">
+    <section class="cards reveal">
+      <h2>Redes Sociales</h2>
+      <p>Publicaciones recientes de Instagram (si está configurado se mostrará el feed).</p>
+      <div id="instagram-feed">No configurado.</div>
+    </section>
+  </main>
+  
+  <footer></footer>
+  <div id="whatsapp-placeholder"></div>
+  <script src="/Segured/drive-config.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const feedContainer = document.getElementById('instagram-feed');
+      // Verificamos configuración
+      if (!feedContainer || !window.DRIVE_CONFIG || !window.DRIVE_CONFIG.instagramAccessToken) {
+        if (feedContainer) feedContainer.innerHTML = '<div class="alert alert-light border">Configura el token de Instagram en drive-config.js para ver el feed.</div>';
+        return;
+      }
+
+      const token = window.DRIVE_CONFIG.instagramAccessToken;
+      if (token === "YOUR_INSTAGRAM_ACCESS_TOKEN") {
+        feedContainer.innerHTML = '<div class="alert alert-light border">Configura el token de Instagram en drive-config.js para ver el feed.</div>';
+        return;
+      }
+
+      const limit = 5; // Número de posts a mostrar
+      const url = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=${limit}&access_token=${token}`;
+
+      try {
+        feedContainer.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-warning" role="status"></div></div>';
+        
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.data && data.data.length > 0) {
+          let html = '<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">';
+          data.data.forEach(post => {
+            // Si es video usamos el thumbnail, si es imagen usamos la media_url
+            const imageUrl = post.media_type === 'VIDEO' ? (post.thumbnail_url || post.media_url) : post.media_url;
+            const caption = post.caption ? (post.caption.length > 80 ? post.caption.substring(0, 80) + '...' : post.caption) : '';
+            
+            html += `
+              <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                  <div class="ratio ratio-1x1 overflow-hidden rounded-top">
+                     <img src="${imageUrl}" class="card-img-top object-fit-cover" alt="Instagram Post" loading="lazy" style="object-fit: cover;">
+                  </div>
+                  <div class="card-body">
+                    <p class="card-text small text-muted">${caption}</p>
+                    <a href="${post.permalink}" target="_blank" class="btn btn-sm btn-outline-dark stretched-link">Ver en Instagram</a>
+                  </div>
+                </div>
+              </div>`;
+          });
+          html += '</div>';
+          feedContainer.innerHTML = html;
+        } else {
+          feedContainer.innerHTML = '<p class="text-muted">No se encontraron publicaciones recientes.</p>';
+        }
+      } catch (error) {
+        console.error('Error Instagram:', error);
+        feedContainer.innerHTML = '<div class="alert alert-warning">No se pudo cargar el feed de Instagram.</div>';
+      }
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/Segured/app.js" defer></script>
+  <script src="../main.js" defer></script>
+</body>
+</html>
