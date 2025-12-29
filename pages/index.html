@@ -1,12 +1,10 @@
-<!-- Página de inicio principal (Landing Page) con secciones de servicios, testimonios y catálogo.
-     Actúa como punto de entrada visual y carga los componentes globales de navegación. -->
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#fbbf24" />
-  <title>Segured</title>
+  <meta name="theme-color" content="#0d6efd" />
+  <title>Listoke - Mis Listas</title>
   <link rel="icon" href="/Listoke/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="/Listoke/manifest.json">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,243 +12,51 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100 bg-light">
   <nav></nav>
 
-  <main>
-    <!-- Hero Section estilo Industrial -->
-    <section id="inicio" class="bg-dark text-white py-5 mb-5 position-relative overflow-hidden hero-parallax">
-      <div class="container py-5 reveal">
-        <div class="row align-items-center">
-          <div class="col-lg-6 py-5 position-relative" style="z-index: 2;">
-            <span class="text-warning fw-bold text-uppercase mb-2 d-block">Seguridad & Confianza</span>
-            <h1 class="display-3 fw-bold mb-4">CONSTRUYENDO UN FUTURO SEGURO</h1>
-            <p class="lead mb-4 text-white-50">Soluciones integrales en prevención de riesgos laborales. Formación experta, auditorías precisas y equipamiento certificado.</p>
-            <div class="d-flex gap-3">
-              <a class="btn btn-warning btn-lg" href="about.html">NUESTROS SERVICIOS</a>
-              <a class="btn btn-outline-light btn-lg rounded-0" href="contact.html">CONTACTAR</a>
-            </div>
-          </div>
-          <div class="col-lg-6 d-none d-lg-block position-relative">
-            <!-- Círculo decorativo amarillo -->
-            <!-- <div class="position-absolute top-50 start-50 translate-middle bg-warning rounded-circle" style="width: 400px; height: 400px; opacity: 0.1;"></div> -->
-            <!-- <img src="/Listoke/assets/images/safety-helmet.svg" class="img-fluid position-relative" style="transform: scale(1.2);" alt="hero"> -->
+  <main class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        
+        <!-- Selector de Lista -->
+        <div class="card shadow-sm mb-4 border-0">
+          <div class="card-body p-2">
+            <ul class="nav nav-pills nav-fill" id="listTabs">
+              <li class="nav-item">
+                <a class="nav-link active" href="#" data-list="pendientes">Pendientes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-list="compras">Compras</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-list="tareas">Tareas</a>
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Features Section (Overlap) -->
-    <section class="container reveal" style="margin-top: -100px; position: relative; z-index: 10;">
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="feature-box text-center">
-            <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
-            <h4>Certificación ISO</h4>
-            <p class="text-muted">Garantizamos el cumplimiento de todas las normativas internacionales de seguridad.</p>
-          </div>
+        <!-- Input -->
+        <div class="input-group mb-3 shadow-sm">
+          <input type="text" id="newItemInput" class="form-control form-control-lg border-0" placeholder="Agregar nuevo elemento...">
+          <button class="btn btn-primary px-4" type="button" id="addItemBtn"><i class="bi bi-plus-lg"></i></button>
         </div>
-        <div class="col-md-4">
-          <div class="feature-box text-center">
-            <div class="feature-icon"><i class="bi bi-people-fill"></i></div>
-            <h4>Expertos Calificados</h4>
-            <p class="text-muted">Nuestro equipo cuenta con años de experiencia en prevención de riesgos.</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="feature-box text-center">
-            <div class="feature-icon"><i class="bi bi-gear-wide-connected"></i></div>
-            <h4>Tecnología Avanzada</h4>
-            <p class="text-muted">Utilizamos las últimas herramientas para auditorías y monitoreo.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- About Section -->
-    <section class="container py-5 my-5 reveal">
-      <div class="row align-items-center">
-        <div class="col-lg-6 mb-4 mb-lg-0">
-          <img src="/Listoke/assets/images/img1.svg" class="img-fluid shadow-lg" alt="About Us">
+        <!-- Lista -->
+        <div class="list-group shadow-sm border-0" id="itemsList">
+          <!-- Items se renderizan aquí -->
+          <div class="text-center py-5 text-muted">
+            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+            Cargando listas...
+          </div>
         </div>
-        <div class="col-lg-6 ps-lg-5">
-          <span class="text-warning fw-bold text-uppercase">Sobre Nosotros</span>
-          <h2 class="display-6 fw-bold mb-4">LÍDERES EN SEGURIDAD INDUSTRIAL DESDE 2010</h2>
-          <p class="text-muted mb-4">Nos dedicamos a proteger lo más valioso de su empresa: su capital humano. A través de soluciones integrales, reducimos la siniestralidad y mejoramos la productividad.</p>
-          <ul class="list-unstyled mb-4">
-            <li class="mb-2"><i class="bi bi-check-circle-fill text-warning me-2"></i> Auditorías de seguridad completas</li>
-            <li class="mb-2"><i class="bi bi-check-circle-fill text-warning me-2"></i> Capacitación certificada</li>
-            <li class="mb-2"><i class="bi bi-check-circle-fill text-warning me-2"></i> Venta de EPP de alta calidad</li>
-          </ul>
-          <a href="about.html" class="btn btn-dark">CONOCER MÁS</a>
-        </div>
-      </div>
-    </section>
 
-    <!-- Services Section -->
-    <section class="bg-light py-5 reveal">
-      <div class="container py-4">
-        <div class="text-center mb-5">
-          <span class="text-warning fw-bold text-uppercase">Nuestros Servicios</span>
-          <h2 class="display-5">SOLUCIONES INTEGRALES</h2>
-        </div>
-        <div class="row g-4">
-          <!-- Service 1 -->
-          <div class="col-md-4">
-            <div class="service-card p-4">
-              <div class="service-icon-wrapper">
-                <i class="bi bi-clipboard-data fs-2 text-dark"></i>
-              </div>
-              <h4>Auditorías</h4>
-              <p class="text-muted">Evaluación completa de riesgos en planta y oficinas.</p>
-              <a href="#" class="text-warning text-decoration-none fw-bold">Leer más <i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-          <!-- Service 2 -->
-          <div class="col-md-4">
-            <div class="service-card p-4">
-              <div class="service-icon-wrapper">
-                <i class="bi bi-mortarboard fs-2 text-dark"></i>
-              </div>
-              <h4>Capacitación</h4>
-              <p class="text-muted">Cursos presenciales y online para su personal.</p>
-              <a href="#" class="text-warning text-decoration-none fw-bold">Leer más <i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-          <!-- Service 3 -->
-          <div class="col-md-4">
-            <div class="service-card p-4">
-              <div class="service-icon-wrapper">
-                <i class="bi bi-tools fs-2 text-dark"></i>
-              </div>
-              <h4>Mantenimiento</h4>
-              <p class="text-muted">Revisión de extintores y sistemas contra incendios.</p>
-              <a href="#" class="text-warning text-decoration-none fw-bold">Leer más <i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-        </div>
       </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="bg-dark text-white py-5 reveal">
-      <div class="container py-4">
-        <div class="row text-center g-4">
-          <div class="col-md-3">
-            <div class="display-4 fw-bold text-warning"><span class="counter" data-target="150">0</span>+</div>
-            <div class="text-uppercase small letter-spacing-1">Proyectos</div>
-          </div>
-          <div class="col-md-3">
-            <div class="display-4 fw-bold text-warning"><span class="counter" data-target="5000">0</span>+</div>
-            <div class="text-uppercase small letter-spacing-1">Capacitados</div>
-          </div>
-          <div class="col-md-3">
-            <div class="display-4 fw-bold text-warning"><span class="counter" data-target="12">0</span></div>
-            <div class="text-uppercase small letter-spacing-1">Años Exp.</div>
-          </div>
-          <div class="col-md-3">
-            <div class="display-4 fw-bold text-warning"><span class="counter" data-target="100">0</span>%</div>
-            <div class="text-uppercase small letter-spacing-1">Certificado</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-5 mb-5 reveal">
-      <div class="text-center mb-5">
-        <span class="text-warning fw-bold text-uppercase">Catálogo</span>
-        <h2 class="display-5">NUEVO EN TIENDA</h2>
-      </div>
-      
-      <div class="row row-cols-1 row-cols-md-4 g-3">
-        <div class="col">
-          <div class="card h-100 border-0 shadow-sm rounded-0">
-            <div class="bg-light p-4 text-center">
-              <img src="/Listoke/assets/images/img2.svg" class="img-fluid" style="height: 120px; object-fit: contain;" alt="item">
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">Equipo de protección</h5>
-              <p class="text-muted small">Desde cascos hasta arneses certificados.</p>
-              <a class="btn btn-link text-warning text-decoration-none p-0 fw-bold">VER MÁS <span class="ms-1">&rarr;</span></a>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100 border-0 shadow-sm rounded-0">
-            <div class="bg-light p-4 text-center">
-              <img src="/Listoke/assets/images/img3.svg" class="img-fluid" style="height: 120px; object-fit: contain;" alt="item">
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">Detectores</h5>
-              <p class="text-muted small">Detectores portátiles para ambientes industriales.</p>
-              <a class="btn btn-link text-warning text-decoration-none p-0 fw-bold">VER MÁS <span class="ms-1">&rarr;</span></a>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100 border-0 shadow-sm rounded-0">
-            <div class="bg-light p-4 text-center">
-              <img src="/Listoke/assets/images/img4.svg" class="img-fluid" style="height: 120px; object-fit: contain;" alt="item">
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">Capacitación</h5>
-              <p class="text-muted small">Cursos y certificaciones en línea.</p>
-              <a class="btn btn-link text-warning text-decoration-none p-0 fw-bold">VER MÁS <span class="ms-1">&rarr;</span></a>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card h-100 border-0 shadow-sm rounded-0">
-            <div class="bg-light p-4 text-center">
-              <img src="/Listoke/assets/images/img5.svg" class="img-fluid" style="height: 120px; object-fit: contain;" alt="item">
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">Inspecciones</h5>
-              <p class="text-muted small">Servicios de auditoría y seguimiento.</p>
-              <a class="btn btn-link text-warning text-decoration-none p-0 fw-bold">VER MÁS <span class="ms-1">&rarr;</span></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="bg-light py-5 reveal">
-      <div class="container py-4">
-        <div class="text-center mb-5">
-          <span class="text-warning fw-bold text-uppercase">Testimonios</span>
-          <h2 class="display-5">LO QUE DICEN NUESTROS CLIENTES</h2>
-        </div>
-        <div class="row g-4">
-          <div class="col-md-6">
-            <div class="testimonial-card">
-              <div class="mb-3 text-warning">
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              </div>
-              <p class="fst-italic mb-4">"Excelente servicio. La auditoría fue exhaustiva y nos ayudó a mejorar significativamente nuestros estándares de seguridad."</p>
-              <h6 class="fw-bold mb-0">Juan Pérez</h6>
-              <small class="text-muted">Gerente de Planta, Constructora X</small>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="testimonial-card">
-              <div class="mb-3 text-warning">
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              </div>
-              <p class="fst-italic mb-4">"Los cursos de capacitación son muy dinámicos y el personal aprendió rápido el uso correcto de los EPP."</p>
-              <h6 class="fw-bold mb-0">María González</h6>
-              <small class="text-muted">Jefa de RRHH, Minera Y</small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
   </main>
 
-  <footer class="bg-dark text-white py-5 mt-auto"></footer>
+  <footer></footer>
 
-  <div id="whatsapp-placeholder"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/Listoke/app.js" defer></script>
   <script src="../main.js" defer></script>

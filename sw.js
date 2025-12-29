@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sl-demo-v24-svgs'; // Actualización a SVGs
+const CACHE_NAME = 'listoke-v1'; // Nueva versión para Listoke
 const REPO_PREFIX = '/Listoke/'; // Definimos el prefijo actualizado para el nuevo repositorio
 const ASSETS = [
   'pages/', // Cachea el directorio de páginas, que debería servir el nuevo index.
@@ -11,24 +11,7 @@ const ASSETS = [
   'main.js',
   'manifest.json',
   'icons/icon-192.svg',
-  'icons/icon-512.svg',
-  'icons/icon-192.png',
-  'icons/icon-512.png',
-  'scripts/public-data.js',
-  'pages/about.html',
-  'pages/documents.html',
-  'pages/gallery.html',
-  'pages/rrss.html',
-  'pages/contact.html',
-  'assets/images/safety-helmet.svg',
-  'assets/images/safety-sign.svg',
-  'assets/images/fire-extinguisher.svg',
-  'assets/images/img1.svg',
-  'assets/images/img2.svg',
-  'assets/images/img3.svg',
-  'assets/images/img4.svg',
-  'assets/images/img5.svg',
-  'assets/images/logo.svg'
+  'icons/icon-512.svg'
 ].map(path => REPO_PREFIX + path.replace(/^\.\//, ''));
 
 self.addEventListener('install', (event) => {

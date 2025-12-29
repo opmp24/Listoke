@@ -1,87 +1,108 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Estado inicial
+  const defaultData = {
+    'pendientes': [],
+    'compras': [],
+    'tareas': []
+  };
   
-  // --- Carga del Icono de Instalación desde Google Drive ---
-  window.loadCustomInstallIcon = async function() {
-    // Salimos si no hay configuración o carpeta de iconos definida
-    if (!window.DRIVE_CONFIG || !window.DRIVE_CONFIG.apiKey || !window.DRIVE_CONFIG.iconsFolderId) {
-      return;
+  let currentList = 'pendientes';
+  let data = JSON.parse(localStorage.getItem('listoke-db')) || defaultData;
+
+  // Elementos DOM
+  const listTabs = document.getElementById('listTabs');
+  const input = document.getElementById('newItemInput');
+  const addBtn = document.getElementById('addItemBtn');
+  const itemsContainer = document.getElementById('itemsList');
+
+  // Guardar en LocalStorage
+  const save = () => {
+    localStorage.setItem('listoke-db', JSON.stringify(data));
+    render();
+  };
+
+  // Renderizar lista
+  const render = () => {
+    // Actualizar tabs
+    if(listTabs) {
+        listTabs.querySelectorAll('.nav-link').forEach(link => {
+        if (link.dataset.list === currentList) link.classList.add('active');
+        else link.classList.remove('active');
+        });
     }
 
-    const { apiKey, iconsFolderId } = window.DRIVE_CONFIG;
-    const iconName = 'install.svg'; // El nombre de tu icono en Google Drive
+    // Renderizar items
+    if(itemsContainer) {
+        itemsContainer.innerHTML = '';
+        const items = data[currentList] || [];
 
-    try {
-      const q = `name = '${iconName}' and '${iconsFolderId}' in parents and trashed = false`;
-      const searchUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id)&key=${apiKey}`;
-      
-      const searchResp = await fetch(searchUrl);
-      const searchData = await searchResp.json();
-
-      if (searchData.files && searchData.files.length > 0) {
-        const fileId = searchData.files[0].id;
-        const iconUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${apiKey}`;
-        
-        // 1. Actualizar el icono del botón de instalación (si existe)
-        const installBtn = document.getElementById('installBtn');
-        if (installBtn) {
-          const originalSvg = installBtn.querySelector('svg');
-          if (originalSvg) {
-            const newIcon = document.createElement('img');
-            newIcon.src = iconUrl;
-            newIcon.height = 16;
-            newIcon.classList.add('me-1');
-            originalSvg.replaceWith(newIcon);
-          }
+        if (items.length === 0) {
+        itemsContainer.innerHTML = `
+            <div class="text-center py-5 text-muted">
+            <i class="bi bi-clipboard-check fs-1 d-block mb-2 opacity-50"></i>
+            <p>No hay elementos en ${currentList}</p>
+            </div>`;
+        return;
         }
 
-        // 2. Actualizar el logo de la barra de navegación
-        const navLogo = document.querySelector('.navbar-brand img');
-        if (navLogo) {
-          navLogo.src = iconUrl;
-        }
-      }
-    } catch (error) {
-      console.error('Error al cargar el icono de instalación personalizado:', error);
-    }
-  }
+        items.forEach((item, index) => {
+        const el = document.createElement('div');
+        el.className = `list-group-item list-group-item-action d-flex align-items-center p-3 border-0 border-bottom ${item.done ? 'bg-light text-decoration-line-through text-muted' : ''}`;
+        el.innerHTML = `
+            <input class="form-check-input me-3 fs-5" type="checkbox" ${item.done ? 'checked' : ''}>
+            <span class="flex-grow-1 user-select-none">${item.text}</span>
+            <button class="btn btn-sm btn-outline-danger border-0 opacity-50 hover-opacity-100"><i class="bi bi-trash"></i></button>
+        `;
 
-  // --- Lógica de Instalación de la PWA ---
-  let deferredPrompt;
+        // Eventos del item
+        const checkbox = el.querySelector('input');
+        checkbox.addEventListener('change', () => {
+            item.done = checkbox.checked;
+            save();
+        });
 
-  window.addEventListener('beforeinstallprompt', (e) => {
-    // Previene que el mini-infobar aparezca en móviles
-    e.preventDefault();
-    // Guarda el evento para que pueda ser disparado más tarde
-    deferredPrompt = e;
-    // Intenta mostrar el botón (si ya existe en el DOM)
-    window.checkInstallButton();
-  });
+        const deleteBtn = el.querySelector('button');
+        deleteBtn.addEventListener('click', () => {
+            items.splice(index, 1);
+            save();
+        });
 
-  // Función global para verificar y mostrar el botón
-  window.checkInstallButton = () => {
-    const btn = document.getElementById('installBtn');
-    if (btn && deferredPrompt) {
-      btn.style.display = 'block';
+        itemsContainer.appendChild(el);
+        });
     }
   };
 
-  // Delegación de eventos para el click (funciona aunque el botón se reemplace)
-  document.addEventListener('click', async (e) => {
-    const btn = e.target.closest('#installBtn');
-    if (btn && deferredPrompt) {
-      // Oculta nuestro botón de instalación
-      btn.style.display = 'none';
-      // Muestra el prompt de instalación del navegador
-      deferredPrompt.prompt();
-      // Espera a que el usuario responda
-      await deferredPrompt.userChoice;
-      // El prompt ya no se puede usar, lo descartamos
-      deferredPrompt = null;
-    }
-  });
+  // Agregar item
+  const addItem = () => {
+    const text = input.value.trim();
+    if (!text) return;
+    
+    if (!data[currentList]) data[currentList] = [];
+    
+    data[currentList].unshift({ text, done: false });
+    input.value = '';
+    save();
+  };
 
-  // Intentamos cargar el icono personalizado inmediatamente (para el logo y botón)
-  // La función ahora está definida en window, la llamamos a través de él.
-  window.loadCustomInstallIcon();
+  // Event Listeners
+  if (addBtn) addBtn.addEventListener('click', addItem);
+  
+  if (input) {
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addItem();
+    });
+  }
 
+  if (listTabs) {
+    listTabs.addEventListener('click', (e) => {
+        if (e.target.classList.contains('nav-link')) {
+        e.preventDefault();
+        currentList = e.target.dataset.list;
+        render();
+        }
+    });
+  }
+
+  // Inicializar
+  render();
 });
