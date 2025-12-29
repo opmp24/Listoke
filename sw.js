@@ -1,5 +1,5 @@
 const CACHE_NAME = 'sl-demo-v24-svgs'; // Actualización a SVGs
-const REPO_PREFIX = '/Segured/'; // Definimos el prefijo
+const REPO_PREFIX = '/Listoke/'; // Definimos el prefijo actualizado para el nuevo repositorio
 const ASSETS = [
   'pages/', // Cachea el directorio de páginas, que debería servir el nuevo index.
   'pages/index.html',

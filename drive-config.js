@@ -1,4 +1,4 @@
-// d:/VISUAL IA/001TEST/drive-config.js
+// d:/VISUAL IA/Listoke/drive-config.js
 
 window.DRIVE_CONFIG = {
   // Clave de API para acceder a las APIs de Google.
