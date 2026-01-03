@@ -1,4 +1,4 @@
-const CACHE_NAME = 'listoke-v2'; // Nueva versión para Listoke
+const CACHE_NAME = 'listoke-v3'; // Nueva versión para Listoke (Iconos actualizados)
 const REPO_PREFIX = '/Listoke/'; // Definimos el prefijo actualizado para el nuevo repositorio
 const ASSETS = [
   'pages/', // Cachea el directorio de páginas, que debería servir el nuevo index.
