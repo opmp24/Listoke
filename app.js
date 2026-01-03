@@ -75,10 +75,10 @@ function createListElement(list) {
     div.className = 'card shadow-sm border-0 list-item';
     div.dataset.id = list.id;
     div.innerHTML = `
-        <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
+        <div class="card-header d-flex align-items-center justify-content-between py-3">
             <div class="d-flex align-items-center flex-grow-1 gap-2">
                 <i class="bi bi-grip-vertical text-muted list-handle" style="cursor: grab;"></i>
-                <button class="btn btn-sm btn-link text-dark p-0 text-decoration-none" onclick="toggleExpand('list', '${list.id}')">
+                <button class="btn btn-sm btn-link text-body p-0 text-decoration-none" onclick="toggleExpand('list', '${list.id}')">
                     <i class="bi bi-chevron-${list.expanded ? 'down' : 'right'}"></i>
                 </button>
                 <input type="text" class="form-control form-control-sm border-0 fw-bold fs-5" value="${list.title}" onchange="updateTitle('list', '${list.id}', this.value)">
@@ -90,7 +90,7 @@ function createListElement(list) {
                 </ul>
             </div>
         </div>
-        <div class="card-body bg-light p-2 ${list.expanded ? '' : 'd-none'}">
+        <div class="card-body p-2 ${list.expanded ? '' : 'd-none'}">
             <div class="tasks-container d-flex flex-column gap-2 min-h-50"></div>
             <button class="btn btn-outline-primary btn-sm w-100 mt-2 dashed-border" onclick="addNew('task', '${list.id}')">
                 <i class="bi bi-plus"></i> Agregar Tarea
@@ -109,7 +109,7 @@ function createTaskElement(task, listId) {
             <div class="d-flex align-items-center justify-content-between mb-2">
                 <div class="d-flex align-items-center flex-grow-1 gap-2">
                     <i class="bi bi-grip-vertical text-muted task-handle" style="cursor: grab;"></i>
-                    <button class="btn btn-sm btn-link text-dark p-0" onclick="toggleExpand('task', '${task.id}', '${listId}')">
+                    <button class="btn btn-sm btn-link text-body p-0" onclick="toggleExpand('task', '${task.id}', '${listId}')">
                         <i class="bi bi-chevron-${task.expanded ? 'down' : 'right'}"></i>
                     </button>
                     <input type="text" class="form-control form-control-sm border-0 fw-semibold" value="${task.title}" onchange="updateTitle('task', '${task.id}', this.value, '${listId}')">
@@ -130,7 +130,7 @@ function createTaskElement(task, listId) {
 
 function createItemElement(item, taskId, listId) {
     const div = document.createElement('div');
-    div.className = 'd-flex align-items-center gap-2 p-1 bg-white border rounded mb-1 item-row';
+    div.className = 'd-flex align-items-center gap-2 p-1 border rounded mb-1 item-row';
     div.dataset.id = item.id;
     div.innerHTML = `
         <i class="bi bi-grip-vertical text-muted small" style="cursor: grab;"></i>

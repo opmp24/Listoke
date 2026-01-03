@@ -14,6 +14,20 @@
  * 3. La inyección: Una vez que obtiene el index.html, extrae el <nav> y el <footer> y los pega en la página actual.
  */
 document.addEventListener('DOMContentLoaded', async () => {
+    // --- INICIO LÓGICA MODO OSCURO ---
+    // 1. Inyectar CSS del tema
+    const themeLink = document.createElement('link');
+    themeLink.rel = 'stylesheet';
+    themeLink.href = '../css/ios-theme.css'; // Asumiendo que estamos en /pages/
+    document.head.appendChild(themeLink);
+
+    // 2. Aplicar tema guardado
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+    // --- FIN LÓGICA MODO OSCURO ---
+
     const nav = document.querySelector('nav');
     const footer = document.querySelector('footer');
 
@@ -40,6 +54,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Inyectamos el Nav
         const masterNav = doc.querySelector('nav');
         if (masterNav && nav) {
+            // Insertar botón de tema en el Nav
+            const navContainer = masterNav.querySelector('.container') || masterNav.querySelector('.container-fluid');
+            if (navContainer) {
+                const themeBtn = document.createElement('button');
+                themeBtn.className = 'btn btn-link nav-link ms-auto me-2';
+                themeBtn.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="bi bi-sun-fill"></i>' : '<i class="bi bi-moon-stars-fill"></i>';
+                themeBtn.onclick = window.toggleTheme;
+                
+                // Insertar antes del botón de menú móvil (toggler) si existe, o al final
+                const toggler = navContainer.querySelector('.navbar-toggler');
+                navContainer.insertBefore(themeBtn, toggler);
+            }
             nav.replaceWith(masterNav);
         }
 
@@ -125,3 +151,16 @@ function initCounterAnimations() {
     
     counters.forEach(c => observer.observe(c));
 }
+
+// Función global para alternar tema
+window.toggleTheme = () => {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    
+    // Actualizar icono del botón si existe
+    const btnIcon = document.querySelector('.bi-moon-stars-fill, .bi-sun-fill');
+    if (btnIcon) {
+        btnIcon.className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+    }
+};

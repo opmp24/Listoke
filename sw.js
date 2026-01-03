@@ -1,4 +1,4 @@
-const CACHE_NAME = 'listoke-v3'; // Nueva versión para Listoke (Iconos actualizados)
+const CACHE_NAME = 'listoke-v4'; // Nueva versión para Listoke (Modo Oscuro)
 const REPO_PREFIX = '/Listoke/'; // Definimos el prefijo actualizado para el nuevo repositorio
 const ASSETS = [
   'pages/', // Cachea el directorio de páginas, que debería servir el nuevo index.
@@ -7,6 +7,7 @@ const ASSETS = [
   'drive-config.js',
   'favicon.svg',
   'css/style.css',
+  'css/ios-theme.css',
   'app.js',
   'main.js',
   'manifest.json',
