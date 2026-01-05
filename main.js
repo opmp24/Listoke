@@ -14,19 +14,11 @@
  * 3. La inyección: Una vez que obtiene el index.html, extrae el <nav> y el <footer> y los pega en la página actual.
  */
 document.addEventListener('DOMContentLoaded', async () => {
-    // --- INICIO LÓGICA MODO OSCURO ---
-    // 1. Inyectar CSS del tema
+    // Inyectar CSS del tema iOS (si es necesario para estilos específicos)
     const themeLink = document.createElement('link');
     themeLink.rel = 'stylesheet';
     themeLink.href = '/css/ios-theme.css'; // Ruta absoluta para Netlify
     document.head.appendChild(themeLink);
-
-    // 2. Aplicar tema guardado
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-    }
-    // --- FIN LÓGICA MODO OSCURO ---
 
     const nav = document.querySelector('nav');
     const footer = document.querySelector('footer');
@@ -58,8 +50,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const navContainer = masterNav.querySelector('.container') || masterNav.querySelector('.container-fluid');
             if (navContainer) {
                 const themeBtn = document.createElement('button');
-                themeBtn.className = 'btn btn-link nav-link ms-auto me-2';
-                themeBtn.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="bi bi-sun-fill"></i>' : '<i class="bi bi-moon-stars-fill"></i>';
+                themeBtn.className = 'btn btn-link nav-link ms-auto me-2 p-2';
+                themeBtn.innerHTML = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '<i class="bi bi-sun-fill"></i>' : '<i class="bi bi-moon-stars-fill"></i>';
                 themeBtn.onclick = window.toggleTheme;
                 
                 // Insertar antes del botón de menú móvil (toggler) si existe, o al final
@@ -154,8 +146,10 @@ function initCounterAnimations() {
 
 // Función global para alternar tema
 window.toggleTheme = () => {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-bs-theme', newTheme);
+    const isDark = newTheme === 'dark';
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     
     // Actualizar icono del botón si existe
