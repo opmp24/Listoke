@@ -14,6 +14,38 @@ body {
   color: var(--text-grey);
 }
 
+/* --- MODO OSCURO --- */
+body.dark-mode {
+  background-color: #121212 !important; /* Fondo principal oscuro */
+  color: #e0e0e0;
+}
+
+body.dark-mode .bg-light {
+  background-color: #121212 !important;
+}
+
+body.dark-mode .card {
+  background-color: #1e1e1e;
+  border-color: #333;
+  color: #e0e0e0;
+}
+
+body.dark-mode .form-control {
+  background-color: #2d2d2d;
+  border-color: #444;
+  color: #fff;
+}
+
+body.dark-mode .text-muted {
+  color: #a0a0a0 !important;
+}
+
+body.dark-mode .list-group-item {
+  background-color: #1e1e1e;
+  border-color: #333;
+  color: #e0e0e0;
+}
+
 /* Botones estilo industrial */
 .btn {
   border-radius: 0; /* Bordes cuadrados */

@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 1. Inyectar CSS del tema
     const themeLink = document.createElement('link');
     themeLink.rel = 'stylesheet';
-    themeLink.href = '../css/ios-theme.css'; // Asumiendo que estamos en /pages/
+    themeLink.href = '/css/ios-theme.css'; // Ruta absoluta para Netlify
     document.head.appendChild(themeLink);
 
     // 2. Aplicar tema guardado
